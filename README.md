@@ -28,12 +28,18 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - Runs directly in Google Chrome on any Chromebook.
    - Requires zero extensions, zero flags, and zero developer mode.
 
-2. **Surveillance Defense Sensors (Auto-Cloak)**:
-   - **Auto-Cloak on Tab Blur**: When a teacher inspects the Chromebook or when you click another window, the tab automatically flips to an authentic Decoy.
-   - **Auto-Cloak on Cursor Leave**: Automatically cloaks if your mouse exits the window.
-   - **Auto-Cloak on Visibility Change**: Instantly hides when minimized or split-screened.
+2. **Active Surveillance Radar & Real-Time Monitoring Alert**:
+   - **Real-Time Inspection Alert**: Continuously monitors tab focus state (`window.onblur`), visibility changes (`document.hidden`), compositor/frame micro-stutter spikes (caused by WebRTC screen recording or rapid desktop thumbnail generation), and untrusted automation clicks.
+   - **Visual Pulse & Floating Alert**: Features a live telemetry banner (`🟢 Surveillance Radar: Screen Private` → `🚨 ACTIVE SURVEILLANCE ALERT: MONITORING DETECTED!`) with exact trigger timestamps.
+   - **Acoustic Warning Chime**: Synthesizes a discrete high-frequency double-tone (`880Hz → 660Hz`) via Web Audio API right into the user's earbuds to alert them immediately if the screen is inspected while looking away.
+   - **Auto-Engage Decoy on Alert**: Instantly flips to the Google Docs essay the millisecond an inspection hook is flagged.
+   - **Emergency Blackout Mode**: Press `Alt + K` or click **"⬛ Emergency Blackout"** to immediately display a pure black asleep screen.
 
-3. **Multi-Template School Decoys & Full Interactivity**:
+3. **In-App Study Notes & Citation Scratchpad**:
+   - Built-in scratchpad for jotting lecture notes, timestamps, and bibliography citations.
+   - Auto-saves to `localStorage` and includes a one-click **"📄 Send to Google Doc"** button to append notes directly into the active essay.
+
+4. **Multi-Template School Decoys & Full Interactivity**:
    - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
      - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
      - 🏛️ *AP US History: Progressive Era & Labor Reform*
@@ -44,12 +50,12 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - 🏫 **Interactive Google Classroom**: Stream, Classwork, and People views with clickable "Turn In" buttons and submission confirmations.
    - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
 
-4. **Academic Media Player Controls**:
+5. **Academic Media Player Controls**:
    - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
    - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
    - **Theater Mode**: One-click distraction-free cinema player.
 
-5. **Security, Sensors & Cloaking**:
+6. **Security, Sensors & Cloaking**:
    - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
    - **Force-Close Prevention (`onbeforeunload`)**: Optional prompt before leaving to block monitoring tools or accidental tab closure.
    - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.

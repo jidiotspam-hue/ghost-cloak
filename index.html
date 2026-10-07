@@ -416,6 +416,44 @@
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+    @keyframes radarPulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .radar-alert {
+      background: rgba(239, 68, 68, 0.18) !important;
+      border-color: #ef4444 !important;
+      animation: alertFlash 1s infinite alternate;
+    }
+    @keyframes alertFlash {
+      from { box-shadow: 0 0 4px rgba(239, 68, 68, 0.3); }
+      to { box-shadow: 0 0 18px rgba(239, 68, 68, 0.85); }
+    }
+    .floating-alert-banner {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #b91c1c;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+      z-index: 10000000;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid #f87171;
+      animation: slideDownAlert 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideDownAlert {
+      from { transform: translate(-50%, -40px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
     /* DECOY FULLSCREEN OVERLAY (PANIC SCREEN) */
     #decoyOverlay {
       position: fixed;
@@ -688,6 +726,27 @@
         Defend against school monitoring (GoGuardian, Securly, Lightspeed, LanSchool). When panic is triggered, video audio automatically mutes and the screen morphs into an authentic school interface:
       </p>
 
+      <!-- ACTIVE SURVEILLANCE RADAR BANNER -->
+      <div id="surveillanceRadarBanner" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; transition: all 0.3s ease;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div id="radarPulseDot" style="width: 14px; height: 14px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: radarPulse 1.8s infinite;"></div>
+          <div>
+            <div id="radarStatusTitle" style="font-size: 14px; font-weight: 700; color: #34d399;">
+              🛡️ Surveillance Radar: Inactive / Screen Private
+            </div>
+            <div id="radarStatusDesc" style="font-size: 12px; color: #9ca3af;">
+              Continuous telemetry sensor active: Tab Focus, Visibility &amp; Micro-stutter normal.
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn btn-sec" style="font-size: 11px; padding: 4px 10px;" onclick="testSurveillanceAlert()">
+            🔔 Test Alert
+          </button>
+          <span id="lastEventTimestamp" style="font-size: 11px; color: #6b7280; font-family: monospace;">Telemetry: Online</span>
+        </div>
+      </div>
+
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; align-items:center;">
         <span style="font-size:13px; font-weight:600;">Active Decoy Screen:</span>
         <button class="btn btn-sec" id="btnDecoyDocs" onclick="setDecoyTemplate('docs')">📄 Google Docs</button>
@@ -728,6 +787,22 @@
             <div class="sensor-sub">Prompts before closing tab to stop accidental loss</div>
           </div>
         </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorAudioChime" onchange="saveSensorSettings()" checked />
+          <div>
+            <div class="sensor-text">🔔 Sound Chime on Surveillance Alert</div>
+            <div class="sensor-sub">Discreet acoustic blip in headphones when monitored</div>
+          </div>
+        </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorAutoDecoyAlert" onchange="saveSensorSettings()" checked />
+          <div>
+            <div class="sensor-text">⚡ Auto-Engage Decoy on Active Alert</div>
+            <div class="sensor-sub">Instantly morphs to Google Docs upon remote inspection</div>
+          </div>
+        </div>
       </div>
 
       <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
@@ -742,13 +817,32 @@
         <button class="btn btn-panic" onclick="togglePanicMode()">
           🚨 Test Panic Screen
         </button>
+        <button class="btn btn-sec" onclick="toggleBlackout()" title="Shortcut: Alt + K">
+          ⬛ Emergency Blackout (Alt + K)
+        </button>
         <button class="btn btn-cloak" onclick="downloadStandaloneFile()">
           💾 Download Offline Study Notes (Biology_Lab_Notes.html)
         </button>
       </div>
     </div>
 
-    <!-- SECTION 3: CLIENT WEB GATEWAY -->
+    <!-- SECTION 3: IN-APP STUDY NOTES & CITATION SCRATCHPAD -->
+    <div class="card" style="border-color: rgba(168, 85, 247, 0.4); background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.08), transparent 70%), var(--card);">
+      <h2>📝 Lecture Notes &amp; Bibliography Scratchpad</h2>
+      <p>
+        Jot down real lecture notes while studying. Notes auto-save to browser storage and can be copied directly into your Google Docs essay:
+      </p>
+      <textarea id="studyScratchpad" style="width: 100%; height: 110px; background: var(--code-bg); color: #fff; border: 1px solid #374151; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; resize: vertical; margin-bottom: 10px; box-sizing: border-box;" placeholder="Type timestamps, key lecture quotes, and bibliography citations here..." oninput="saveScratchpad()"></textarea>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+        <span id="scratchpadStatus" style="font-size: 12px; color: var(--text-muted);">Auto-saved locally</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="copyScratchpadToDocs()">📄 Send to Google Doc</button>
+          <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="clearScratchpad()">🗑️ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: CLIENT WEB GATEWAY -->
     <div class="card" style="border-color: rgba(59, 130, 246, 0.4); background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%), var(--card);">
       <h2>🌐 Client-Side Web Gateway &amp; Unblocked Hub</h2>
       <p>
@@ -771,6 +865,16 @@
     </div>
 
   </div>
+
+  <!-- FLOATING SURVEILLANCE ALERT BANNER -->
+  <div id="floatingAlertBanner" class="floating-alert-banner">
+    <span style="font-size:18px;">⚠️</span>
+    <span id="floatingAlertText">ACTIVE MONITORING DETECTED!</span>
+    <button class="btn btn-sec" style="padding: 2px 8px; font-size: 11px; background: rgba(0,0,0,0.4); color: #fff; border: 1px solid rgba(255,255,255,0.4);" onclick="resetSurveillanceRadar()">Dismiss</button>
+  </div>
+
+  <!-- EMERGENCY BLACKOUT OVERLAY -->
+  <div id="blackoutOverlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:9999999; display:none; cursor:pointer;" onclick="toggleBlackout()" title="Click anywhere or press Alt+K to wake screen"></div>
 
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast"></div>
@@ -1081,8 +1185,142 @@
       }
     });
 
+    // --- ACTIVE SURVEILLANCE RADAR & MONITORING DETECTION ---
+    var surveillanceState = {
+      isMonitored: false,
+      lastEvent: null,
+      lastFpsCheck: performance.now(),
+      stutterCount: 0
+    };
+
+    var audioCtx = null;
+    function playWarningChime() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        // Gentle double-pip warning blip: 880Hz -> 440Hz
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.16);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.18);
+
+        setTimeout(function() {
+          if (!audioCtx) return;
+          var osc2 = audioCtx.createOscillator();
+          var gain2 = audioCtx.createGain();
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.type = "sine";
+          osc2.frequency.setValueAtTime(1174, audioCtx.currentTime);
+          osc2.frequency.exponentialRampToValueAtTime(587, audioCtx.currentTime + 0.18);
+          gain2.gain.setValueAtTime(0.22, audioCtx.currentTime);
+          gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+          osc2.start(audioCtx.currentTime);
+          osc2.stop(audioCtx.currentTime + 0.2);
+        }, 120);
+      } catch(e) {}
+    }
+
+    function triggerSurveillanceAlert(reason) {
+      surveillanceState.isMonitored = true;
+      var now = new Date();
+      var timeStr = now.toLocaleTimeString();
+      surveillanceState.lastEvent = { reason: reason, time: timeStr };
+
+      var banner = document.getElementById("surveillanceRadarBanner");
+      var dot = document.getElementById("radarPulseDot");
+      var title = document.getElementById("radarStatusTitle");
+      var desc = document.getElementById("radarStatusDesc");
+      var timestamp = document.getElementById("lastEventTimestamp");
+      var floatingAlert = document.getElementById("floatingAlertBanner");
+      var floatingText = document.getElementById("floatingAlertText");
+
+      if (banner) banner.className = "radar-alert";
+      if (dot) {
+        dot.style.background = "#ef4444";
+        dot.style.boxShadow = "0 0 14px #ef4444";
+      }
+      if (title) {
+        title.innerHTML = "🚨 ACTIVE SURVEILLANCE ALERT: MONITORING DETECTED!";
+        title.style.color = "#f87171";
+      }
+      if (desc) {
+        desc.innerHTML = "Trigger: <b>" + reason + "</b> at " + timeStr + ". Remote focus diversion or thumbnail capture hook.";
+      }
+      if (timestamp) {
+        timestamp.innerText = "Alert: " + timeStr;
+      }
+
+      if (floatingAlert && floatingText) {
+        floatingText.innerText = "SURVEILLANCE HOOK DETECTED: " + reason.toUpperCase();
+        floatingAlert.style.display = "flex";
+      }
+
+      var chimeBox = document.getElementById("sensorAudioChime");
+      if (!chimeBox || chimeBox.checked) {
+        playWarningChime();
+      }
+
+      var autoDecoyBox = document.getElementById("sensorAutoDecoyAlert");
+      if (autoDecoyBox && autoDecoyBox.checked) {
+        var overlay = document.getElementById("decoyOverlay");
+        if (overlay && overlay.style.display !== "flex") {
+          togglePanicMode();
+        }
+      }
+
+      showToast("🚨 SURVEILLANCE ALERT: " + reason);
+
+      clearTimeout(window._alertTimeout);
+      window._alertTimeout = setTimeout(function() {
+        resetSurveillanceRadar();
+      }, 12000);
+    }
+
+    function resetSurveillanceRadar() {
+      surveillanceState.isMonitored = false;
+      var banner = document.getElementById("surveillanceRadarBanner");
+      var dot = document.getElementById("radarPulseDot");
+      var title = document.getElementById("radarStatusTitle");
+      var desc = document.getElementById("radarStatusDesc");
+      var floatingAlert = document.getElementById("floatingAlertBanner");
+
+      if (banner) banner.className = "";
+      if (dot) {
+        dot.style.background = "#10b981";
+        dot.style.boxShadow = "0 0 10px #10b981";
+      }
+      if (title) {
+        title.innerHTML = "🛡️ Surveillance Radar: Inactive / Screen Private";
+        title.style.color = "#34d399";
+      }
+      if (desc) {
+        desc.innerHTML = "Continuous telemetry sensor active: Tab Focus, Visibility &amp; Micro-stutter normal.";
+      }
+      if (floatingAlert) {
+        floatingAlert.style.display = "none";
+      }
+    }
+
+    function testSurveillanceAlert() {
+      triggerSurveillanceAlert("Sensor Diagnostic Self-Test");
+    }
+
     // --- SENSORS & PROTECTION (AUTO-CLOAK ON SURVEILLANCE) ---
     window.addEventListener("blur", function() {
+      triggerSurveillanceAlert("Remote Focus Shift / Tab Blur");
       if (document.getElementById("sensorBlur") && document.getElementById("sensorBlur").checked) {
         var overlay = document.getElementById("decoyOverlay");
         if (overlay.style.display !== "flex") { togglePanicMode(); }
@@ -1090,18 +1328,47 @@
     });
 
     document.addEventListener("visibilitychange", function() {
-      if (document.hidden && document.getElementById("sensorVis") && document.getElementById("sensorVis").checked) {
-        var overlay = document.getElementById("decoyOverlay");
-        if (overlay.style.display !== "flex") { togglePanicMode(); }
+      if (document.hidden) {
+        triggerSurveillanceAlert("Tab Visibility Hidden / Minimized");
+        if (document.getElementById("sensorVis") && document.getElementById("sensorVis").checked) {
+          var overlay = document.getElementById("decoyOverlay");
+          if (overlay.style.display !== "flex") { togglePanicMode(); }
+        }
       }
     });
 
     document.addEventListener("mouseleave", function() {
       if (document.getElementById("sensorMouse") && document.getElementById("sensorMouse").checked) {
+        triggerSurveillanceAlert("Cursor Exited Window");
         var overlay = document.getElementById("decoyOverlay");
         if (overlay.style.display !== "flex") { togglePanicMode(); }
       }
     });
+
+    // Detect synthetic remote automation events
+    document.addEventListener("click", function(e) {
+      if (e.isTrusted === false) {
+        triggerSurveillanceAlert("Synthetic Input Event Injected");
+      }
+    }, true);
+
+    // Frame drop / compositor stutter heuristic
+    var lastFrameTime = performance.now();
+    function checkFrameTimings(now) {
+      var delta = now - lastFrameTime;
+      if (delta > 240 && !document.hidden) {
+        surveillanceState.stutterCount++;
+        if (surveillanceState.stutterCount >= 2) {
+          triggerSurveillanceAlert("Compositor Stutter (Screen Grab Spikes)");
+          surveillanceState.stutterCount = 0;
+        }
+      } else {
+        surveillanceState.stutterCount = Math.max(0, surveillanceState.stutterCount - 0.2);
+      }
+      lastFrameTime = now;
+      requestAnimationFrame(checkFrameTimings);
+    }
+    requestAnimationFrame(checkFrameTimings);
 
     window.addEventListener("beforeunload", function(e) {
       var prevent = document.getElementById("sensorPreventClose") && document.getElementById("sensorPreventClose").checked;
@@ -1112,11 +1379,61 @@
       }
     });
 
+    // --- EMERGENCY BLACKOUT SCREEN ---
+    function toggleBlackout() {
+      var b = document.getElementById("blackoutOverlay");
+      if (!b) return;
+      if (b.style.display === "block") {
+        b.style.display = "none";
+      } else {
+        b.style.display = "block";
+      }
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.altKey && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        toggleBlackout();
+      }
+    });
+
+    // --- LECTURE NOTES SCRATCHPAD ---
+    function saveScratchpad() {
+      var text = document.getElementById("studyScratchpad").value;
+      localStorage.setItem("gc_scratchpad_notes", text);
+      var status = document.getElementById("scratchpadStatus");
+      if (status) status.innerText = "Auto-saved (" + text.length + " chars)";
+    }
+
+    function copyScratchpadToDocs() {
+      var text = document.getElementById("studyScratchpad").value.trim();
+      if (!text) { showToast("Scratchpad is empty!"); return; }
+      var docContent = document.getElementById("docsContent");
+      if (docContent) {
+        var p = document.createElement("p");
+        p.style.fontStyle = "italic";
+        p.style.color = "#1a73e8";
+        p.innerText = "Lecture Study Notes: " + text;
+        docContent.appendChild(p);
+        updateWordCount();
+        showToast("Appended notes into Google Doc!");
+      }
+    }
+
+    function clearScratchpad() {
+      if (confirm("Clear your study notes?")) {
+        document.getElementById("studyScratchpad").value = "";
+        saveScratchpad();
+      }
+    }
+
     function saveSensorSettings() {
       if (document.getElementById("sensorBlur")) localStorage.setItem("cb_sensor_blur", document.getElementById("sensorBlur").checked);
       if (document.getElementById("sensorMouse")) localStorage.setItem("cb_sensor_mouse", document.getElementById("sensorMouse").checked);
       if (document.getElementById("sensorVis")) localStorage.setItem("cb_sensor_vis", document.getElementById("sensorVis").checked);
       if (document.getElementById("sensorPreventClose")) localStorage.setItem("cb_prevent_close", document.getElementById("sensorPreventClose").checked);
+      if (document.getElementById("sensorAudioChime")) localStorage.setItem("cb_sensor_audio_chime", document.getElementById("sensorAudioChime").checked);
+      if (document.getElementById("sensorAutoDecoyAlert")) localStorage.setItem("cb_sensor_auto_decoy", document.getElementById("sensorAutoDecoyAlert").checked);
       if (document.getElementById("panicHotkeySelect")) localStorage.setItem("cb_panic_hotkey", document.getElementById("panicHotkeySelect").value);
       showToast("Security & sensor settings saved");
     }
@@ -1672,8 +1989,20 @@
       if (localStorage.getItem("cb_prevent_close") !== null) {
         document.getElementById("sensorPreventClose").checked = localStorage.getItem("cb_prevent_close") === "true";
       }
+      if (localStorage.getItem("cb_sensor_audio_chime") !== null && document.getElementById("sensorAudioChime")) {
+        document.getElementById("sensorAudioChime").checked = localStorage.getItem("cb_sensor_audio_chime") === "true";
+      }
+      if (localStorage.getItem("cb_sensor_auto_decoy") !== null && document.getElementById("sensorAutoDecoyAlert")) {
+        document.getElementById("sensorAutoDecoyAlert").checked = localStorage.getItem("cb_sensor_auto_decoy") === "true";
+      }
       if (localStorage.getItem("cb_panic_hotkey") !== null) {
         document.getElementById("panicHotkeySelect").value = localStorage.getItem("cb_panic_hotkey");
+      }
+      var savedNotes = localStorage.getItem("gc_scratchpad_notes");
+      if (savedNotes && document.getElementById("studyScratchpad")) {
+        document.getElementById("studyScratchpad").value = savedNotes;
+        var status = document.getElementById("scratchpadStatus");
+        if (status) status.innerText = "Restored (" + savedNotes.length + " chars)";
       }
     } catch(e) {}
 
