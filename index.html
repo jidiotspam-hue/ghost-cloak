@@ -31,7 +31,7 @@
 
     /* TOP HEADER */
     header {
-      background: rgba(17, 24, 39, 0.95);
+      background: rgba(17, 24, 39, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--card-border);
       padding: 12px 24px;
@@ -146,6 +146,21 @@
       margin-bottom: 16px;
     }
 
+    /* CHROMEBOOK CALLOUT */
+    .cb-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
     /* SEARCH & URL BAR */
     .search-row {
       display: flex;
@@ -236,6 +251,7 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
+      position: relative;
     }
     .video-frame-wrap iframe {
       width: 100%;
@@ -309,7 +325,37 @@
     }
     .yt-card-sub { font-size: 11px; color: var(--text-muted); }
 
-    /* DECOY FULLSCREEN OVERLAY (PANIC MODE) */
+    /* SENSORS SETTINGS */
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .sensor-item {
+      background: #1f2937;
+      border: 1px solid #374151;
+      padding: 12px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sensor-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .sensor-text {
+      font-size: 13px;
+    }
+    .sensor-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* DECOY FULLSCREEN OVERLAY (PANIC SCREEN) */
     #decoyOverlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -318,8 +364,11 @@
       z-index: 999999;
       display: none;
       flex-direction: column;
-      font-family: Roboto, Arial, sans-serif;
+      font-family: Roboto, -apple-system, Arial, sans-serif;
     }
+
+    /* DECOY TEMPLATE 1: GOOGLE DOCS */
+    #decoyTemplateDocs { display: flex; flex-direction: column; height: 100%; width: 100%; }
     .docs-nav {
       background: #fff;
       border-bottom: 1px solid #dadce0;
@@ -371,19 +420,50 @@
       line-height: 1.7;
       color: #333;
     }
+
+    /* DECOY TEMPLATE 2: CANVAS LMS */
+    #decoyTemplateCanvas { display: none; flex-direction: row; height: 100%; width: 100%; background: #f5f5f5; color: #2d3b45; }
+    .canvas-sidebar {
+      width: 84px;
+      background: #394b58;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 14px;
+      gap: 18px;
+      color: #fff;
+    }
+    .canvas-logo { width: 44px; height: 44px; background: #e02424; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
+    .canvas-item { font-size: 11px; text-align: center; color: #d0d7dd; cursor: pointer; }
+    .canvas-item.active { color: #fff; font-weight: 700; }
+    .canvas-main { flex: 1; padding: 24px; overflow-y: auto; }
+    .canvas-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 16px; }
+    .c-card { background: #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .c-header { height: 120px; padding: 14px; color: #fff; font-weight: 700; font-size: 16px; }
+    .c-body { padding: 16px; font-size: 13px; color: #666; }
+
+    /* DECOY TEMPLATE 3: GOOGLE CLASSROOM */
+    #decoyTemplateClassroom { display: none; flex-direction: column; height: 100%; width: 100%; background: #fff; color: #3c4043; }
+    .gc-header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 24px; display: flex; align-items: center; gap: 16px; font-size: 18px; font-weight: 500; }
+    .gc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding: 24px; }
+    .gc-card { border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; }
+    .gc-top { height: 110px; background: #1e8e3e; color: #fff; padding: 16px; }
+
+    /* PANIC RESTORE HINT */
     .panic-restore-hint {
       position: fixed;
       bottom: 14px;
       right: 14px;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
       opacity: 0.25;
       transition: opacity 0.2s;
+      z-index: 1000000;
     }
-    .panic-restore-hint:hover { opacity: 0.9; cursor: pointer; }
+    .panic-restore-hint:hover { opacity: 0.95; cursor: pointer; }
 
     /* FOOTER */
     footer {
@@ -407,7 +487,7 @@
     <div class="header-actions">
       <div class="status-badge" id="clientStatusBadge">
         <div class="status-dot"></div>
-        <span id="clientStatusText">Client Engine Active</span>
+        <span id="clientStatusText">Chromebook &bull; Client Engine Active</span>
       </div>
 
       <select class="cloak-select" id="tabCloakSelect" onchange="switchTabCloak(this.value)">
@@ -415,14 +495,15 @@
         <option value="docs">📄 Google Docs</option>
         <option value="drive">📁 Google Drive</option>
         <option value="canvas">🎓 Canvas LMS</option>
+        <option value="classroom">🏫 Google Classroom</option>
         <option value="wiki">📖 Wikipedia</option>
       </select>
 
-      <button class="btn btn-sec" onclick="launchAboutBlank()" title="Opens inside about:blank leaving zero browser history">
-        About:Blank
+      <button class="btn btn-sec" onclick="launchAboutBlank()" title="Opens inside about:blank bypassing GoGuardian URL filters">
+        🚀 About:Blank Cloak
       </button>
 
-      <button class="btn-panic" onclick="togglePanicMode()" title="Hotkey: ESC key">
+      <button class="btn-panic" onclick="togglePanicMode()" title="Hotkey: Press ESC anytime">
         🚨 Panic Cover (ESC)
       </button>
     </div>
@@ -431,15 +512,21 @@
   <!-- MAIN VIEW -->
   <div class="container">
 
+    <!-- CHROMEBOOK SPECIAL BADGE -->
+    <div class="cb-pill">
+      <span>💻</span>
+      <span>100% Compatible with School Chromebooks (No Linux, No Extensions, No Admin Rights Needed)</span>
+    </div>
+
     <!-- SECTION 1: YOUTUBE DIRECT UNBLOCKER -->
     <div class="card" style="border-color: rgba(239, 68, 68, 0.4); background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.08), transparent 70%), var(--card);">
       <h2>▶️ YouTube Multi-Engine Unblocker</h2>
       <p>
-        Runs 100% locally on your device. Paste any video link (youtube.com, youtu.be, shorts), enter a video ID, or search keywords to stream with zero blocks:
+        Streams directly in your Chromebook browser. Paste any YouTube URL (youtube.com, youtu.be, shorts), enter an 11-character video ID, or search:
       </p>
 
       <div class="search-row">
-        <input class="search-input" id="ytQuery" type="text" placeholder="Paste YouTube URL / Video ID or search keywords (e.g. lofi hip hop, mrbeast, music)..." value="lofi beats" onkeydown="if(event.key==='Enter') searchOrPlay();" />
+        <input class="search-input" id="ytQuery" type="text" placeholder="Paste YouTube URL / Video ID or search (e.g. lofi beats, mrbeast, music)..." value="lofi beats" onkeydown="if(event.key==='Enter') searchOrPlay();" />
         <button class="btn btn-yt" onclick="searchOrPlay()">▶️ Play / Search</button>
       </div>
 
@@ -451,6 +538,7 @@
             <button class="engine-tab" id="eng-piped" onclick="switchEngine('piped')">🛡️ Piped (Ad-Free)</button>
             <button class="engine-tab" id="eng-inv" onclick="switchEngine('inv')">🌐 Invidious</button>
             <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
+            <button class="engine-tab" id="eng-inv3" onclick="switchEngine('inv3')">⚡ Mirror 3</button>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="closePlayer()">✕ Close</button>
@@ -468,7 +556,7 @@
           <div class="player-title" id="activeVidTitle">Video Player Active</div>
           <div style="display:flex; gap:8px;">
             <button class="btn btn-sec" style="padding:6px 12px; font-size:12px;" onclick="copyPlayerLink()">📋 Copy Link</button>
-            <button class="btn btn-sec" style="padding:6px 12px; font-size:12px;" onclick="openPlayerInBlank()">🔲 Open in About:Blank</button>
+            <button class="btn btn-sec" style="padding:6px 12px; font-size:12px;" onclick="openPlayerInBlank()">🔲 About:Blank Player</button>
           </div>
         </div>
       </div>
@@ -477,11 +565,61 @@
       <div class="results-grid" id="ytResults"></div>
     </div>
 
-    <!-- SECTION 2: CLIENT WEB GATEWAY & PROXY -->
+    <!-- SECTION 2: CHROMEBOOK DIGITAL SURVEILLANCE DEFENSE (SENSORS & AUTO-CLOAK) -->
+    <div class="card" style="border-color: rgba(16, 185, 129, 0.4); background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 70%), var(--card);">
+      <h2>🛡️ Chromebook Surveillance Defense &amp; Decoy Camouflage</h2>
+      <p>
+        School extensions (GoGuardian, Securly, Lightspeed, LanSchool) inspect student screens digitally. Configure automatic defense sensors below:
+      </p>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; align-items:center;">
+        <span style="font-size:13px; font-weight:600;">Active Panic Decoy:</span>
+        <button class="btn btn-sec" id="btnDecoyDocs" onclick="setDecoyTemplate('docs')">📄 Google Docs</button>
+        <button class="btn btn-sec" id="btnDecoyCanvas" onclick="setDecoyTemplate('canvas')">🎓 Canvas LMS</button>
+        <button class="btn btn-sec" id="btnDecoyClassroom" onclick="setDecoyTemplate('classroom')">🏫 Google Classroom</button>
+      </div>
+
+      <div class="sensor-grid">
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorBlur" onchange="saveSensorSettings()" checked />
+          <div>
+            <div class="sensor-text">Auto-Cloak on Tab Blur / Focus Loss</div>
+            <div class="sensor-sub">Instantly swaps to Decoy if teacher inspects or tab loses focus</div>
+          </div>
+        </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorMouse" onchange="saveSensorSettings()" />
+          <div>
+            <div class="sensor-text">Auto-Cloak on Cursor Leave</div>
+            <div class="sensor-sub">Activates if mouse cursor leaves the Chromebook window</div>
+          </div>
+        </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorVis" onchange="saveSensorSettings()" checked />
+          <div>
+            <div class="sensor-text">Auto-Cloak on Visibility Change</div>
+            <div class="sensor-sub">Hides secret tab during window minimize or split screen</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-panic" onclick="togglePanicMode()">
+          🚨 Test Panic Screen (or press ESC / ` key)
+        </button>
+        <button class="btn btn-cloak" onclick="downloadStandaloneFile()">
+          💾 Download Standalone File (.html) for Chromebook Downloads
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION 3: CLIENT WEB GATEWAY -->
     <div class="card" style="border-color: rgba(59, 130, 246, 0.4); background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%), var(--card);">
       <h2>🌐 Client-Side Web Gateway</h2>
       <p>
-        Browse through client-side sandbox iframes or route through your local background proxy if active on your machine:
+        Browse through client-side sandbox iframes or launch directly into an <code>about:blank</code> cloak:
       </p>
 
       <div class="search-row">
@@ -499,50 +637,91 @@
       </div>
     </div>
 
-    <!-- SECTION 3: HARDWARE GRAPHICS CLOAK (MACOS APP) -->
-    <div class="card" style="border-color: rgba(16, 185, 129, 0.4); background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 70%), var(--card);">
-      <h2>👻 Hardware Graphics Screen Cloak (macOS WindowServer Level)</h2>
-      <p>
-        Want your screen completely invisible to digital screen capture (Zoom, Microsoft Teams, Discord, GoGuardian, Screen Recorders)?
-        Our companion native macOS utility uses <code>NSWindow.sharingType = .none</code> to strip your real window from digital framebuffers while rendering an authentic Decoy Tab beneath it.
-      </p>
-
-      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-        <a class="btn btn-cloak" href="https://github.com/jidiotspam-hue/ghost-cloak" target="_blank">
-          📦 View GitHub Repo &amp; macOS Binary &rarr;
-        </a>
-        <button class="btn btn-sec" onclick="testLocalServer()">
-          🔄 Test Local Daemon Connection
-        </button>
-      </div>
-    </div>
-
   </div>
 
-  <!-- DECOY FULLSCREEN OVERLAY (PANIC SCREEN) -->
+  <!-- DECOY FULLSCREEN OVERLAY (PANIC MODE) -->
   <div id="decoyOverlay">
-    <div class="docs-nav">
-      <div class="docs-icon">📄</div>
-      <div class="docs-title-wrap">
-        <div class="docs-title" contenteditable="true">Cellular Respiration and Mitochondrial Bioenergetics</div>
-        <div class="docs-menu">
-          <span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Extensions</span><span>Help</span>
+
+    <!-- 1. GOOGLE DOCS TEMPLATE -->
+    <div id="decoyTemplateDocs">
+      <div class="docs-nav">
+        <div class="docs-icon">📄</div>
+        <div class="docs-title-wrap">
+          <div class="docs-title" contenteditable="true">Cellular Respiration and Mitochondrial Bioenergetics</div>
+          <div class="docs-menu">
+            <span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Extensions</span><span>Help</span>
+          </div>
+        </div>
+      </div>
+      <div class="docs-toolbar">
+        <span>↶</span><span>↷</span><span>🖨️</span><span>100%</span><span>Normal text</span><span>Arial</span><span>11</span><span><b>B</b></span><span><i>I</i></span><span><u>U</u></span><span>Align</span><span>List</span>
+      </div>
+      <div class="docs-sheet-container">
+        <div class="docs-page" contenteditable="true">
+          <h1 style="font-size:22px; margin-bottom:14px;">1. Overview of Mitochondrial ATP Synthesis</h1>
+          <p>Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.</p>
+          <p>The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.</p>
+          <h2 style="font-size:18px; margin:20px 0 10px 0;">2. Key Regulatory Checkpoints</h2>
+          <p>Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.</p>
+          <p>Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.</p>
         </div>
       </div>
     </div>
-    <div class="docs-toolbar">
-      <span>↶</span><span>↷</span><span>🖨️</span><span>100%</span><span>Normal text</span><span>Arial</span><span>11</span><span><b>B</b></span><span><i>I</i></span><span><u>U</u></span><span>Align</span><span>List</span>
-    </div>
-    <div class="docs-sheet-container">
-      <div class="docs-page" contenteditable="true">
-        <h1 style="font-size:22px; margin-bottom:14px;">1. Overview of Mitochondrial ATP Synthesis</h1>
-        <p>Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.</p>
-        <p>The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.</p>
-        <h2 style="font-size:18px; margin:20px 0 10px 0;">2. Key Regulatory Checkpoints</h2>
-        <p>Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.</p>
-        <p>Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.</p>
+
+    <!-- 2. CANVAS LMS TEMPLATE -->
+    <div id="decoyTemplateCanvas">
+      <div class="canvas-sidebar">
+        <div class="canvas-logo">C</div>
+        <div class="canvas-item active">Dashboard</div>
+        <div class="canvas-item">Courses</div>
+        <div class="canvas-item">Calendar</div>
+        <div class="canvas-item">Inbox</div>
+        <div class="canvas-item">History</div>
+      </div>
+      <div class="canvas-main">
+        <h1 style="font-size:22px; margin-bottom:14px; font-weight:700;">Dashboard</h1>
+        <div class="canvas-cards">
+          <div class="c-card">
+            <div class="c-header" style="background:#1d4ed8;">AP Biology (Bio 101)</div>
+            <div class="c-body">Unit 4: Bioenergetics &amp; Cellular Respiration<br><small style="color:#888;">Due Friday at 11:59pm</small></div>
+          </div>
+          <div class="c-card">
+            <div class="c-header" style="background:#047857;">AP Calculus BC (Math 250)</div>
+            <div class="c-body">Integration by Parts &amp; Taylor Series<br><small style="color:#888;">Homework #8 Assigned</small></div>
+          </div>
+          <div class="c-card">
+            <div class="c-header" style="background:#7c2d12;">AP US History (Hist 201)</div>
+            <div class="c-body">The Gilded Age &amp; Progressive Era<br><small style="color:#888;">Chapter 18 Reading Notes</small></div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- 3. GOOGLE CLASSROOM TEMPLATE -->
+    <div id="decoyTemplateClassroom">
+      <div class="gc-header">
+        <span style="font-size:22px; cursor:pointer;">&#9776;</span>
+        <span style="color:#1e8e3e; font-weight:700;">Google</span> Classroom
+      </div>
+      <div class="gc-cards">
+        <div class="gc-card">
+          <div class="gc-top" style="background:#1e8e3e;">
+            <div style="font-size:18px; font-weight:700;">Period 2: AP Biology</div>
+            <div style="font-size:12px; opacity:0.9;">Room 204 &bull; Mr. Henderson</div>
+          </div>
+          <div style="padding:16px; font-size:13px; color:#555;">Due tomorrow: Cellular Respiration Worksheet (Turned In)</div>
+        </div>
+        <div class="gc-card">
+          <div class="gc-top" style="background:#1a73e8;">
+            <div style="font-size:18px; font-weight:700;">Period 4: AP Calculus BC</div>
+            <div style="font-size:12px; opacity:0.9;">Room 112 &bull; Ms. Zhao</div>
+          </div>
+          <div style="padding:16px; font-size:13px; color:#555;">Due Oct 10: Problem Set 5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESTORE HINT -->
     <div class="panic-restore-hint" onclick="togglePanicMode()">
       Press ESC or click here to resume
     </div>
@@ -550,12 +729,13 @@
 
   <!-- FOOTER -->
   <footer>
-    GhostCloak Client Suite &bull; Zero Server Footprint &bull; Hosted on GitHub Pages
+    GhostCloak &bull; Client-Side Chromebook &bull; Zero Server Dependency
   </footer>
 
   <script>
     var currentVideoId = "dQw4w9WgXcQ";
     var activeEngine = "yt";
+    var activeDecoyName = "docs";
 
     // --- TAB CLOAKING ---
     var disguises = {
@@ -563,6 +743,7 @@
       "docs": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
       "drive": { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
       "canvas": { title: "Dashboard | Canvas LMS", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+      "classroom": { title: "Classes - Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
       "wiki": { title: "Wikipedia, the free encyclopedia", icon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" }
     };
 
@@ -573,7 +754,20 @@
       if (link) link.href = d.icon;
     }
 
-    // --- PANIC / BOSS KEY (ESC) ---
+    // --- DECOY SELECTION & PANIC MODE ---
+    function setDecoyTemplate(name) {
+      activeDecoyName = name;
+      document.getElementById("decoyTemplateDocs").style.display = (name === "docs") ? "flex" : "none";
+      document.getElementById("decoyTemplateCanvas").style.display = (name === "canvas") ? "flex" : "none";
+      document.getElementById("decoyTemplateClassroom").style.display = (name === "classroom") ? "flex" : "none";
+
+      document.getElementById("btnDecoyDocs").className = (name === "docs") ? "btn" : "btn btn-sec";
+      document.getElementById("btnDecoyCanvas").className = (name === "canvas") ? "btn" : "btn btn-sec";
+      document.getElementById("btnDecoyClassroom").className = (name === "classroom") ? "btn" : "btn btn-sec";
+      
+      switchTabCloak(name);
+    }
+
     function togglePanicMode() {
       var overlay = document.getElementById("decoyOverlay");
       if (overlay.style.display === "flex") {
@@ -582,27 +776,86 @@
       } else {
         overlay.style.display = "flex";
         document.body.style.overflow = "hidden";
-        switchTabCloak("docs");
+        switchTabCloak(activeDecoyName);
       }
     }
 
+    // Hotkey listener: ESC or ` (backtick)
     document.addEventListener("keydown", function(e) {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" || e.key === "`" || (e.ctrlKey && e.key === "b")) {
         togglePanicMode();
       }
     });
+
+    // --- SENSORS (AUTO-CLOAK ON SURVEILLANCE) ---
+    window.addEventListener("blur", function() {
+      if (document.getElementById("sensorBlur") && document.getElementById("sensorBlur").checked) {
+        var overlay = document.getElementById("decoyOverlay");
+        if (overlay.style.display !== "flex") {
+          togglePanicMode();
+        }
+      }
+    });
+
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden && document.getElementById("sensorVis") && document.getElementById("sensorVis").checked) {
+        var overlay = document.getElementById("decoyOverlay");
+        if (overlay.style.display !== "flex") {
+          togglePanicMode();
+        }
+      }
+    });
+
+    document.addEventListener("mouseleave", function() {
+      if (document.getElementById("sensorMouse") && document.getElementById("sensorMouse").checked) {
+        var overlay = document.getElementById("decoyOverlay");
+        if (overlay.style.display !== "flex") {
+          togglePanicMode();
+        }
+      }
+    });
+
+    function saveSensorSettings() {
+      localStorage.setItem("cb_sensor_blur", document.getElementById("sensorBlur").checked);
+      localStorage.setItem("cb_sensor_mouse", document.getElementById("sensorMouse").checked);
+      localStorage.setItem("cb_sensor_vis", document.getElementById("sensorVis").checked);
+    }
+
+    // Load saved sensors
+    if (localStorage.getItem("cb_sensor_blur") !== null) {
+      document.getElementById("sensorBlur").checked = localStorage.getItem("cb_sensor_blur") === "true";
+    }
+    if (localStorage.getItem("cb_sensor_mouse") !== null) {
+      document.getElementById("sensorMouse").checked = localStorage.getItem("cb_sensor_mouse") === "true";
+    }
+    if (localStorage.getItem("cb_sensor_vis") !== null) {
+      document.getElementById("sensorVis").checked = localStorage.getItem("cb_sensor_vis") === "true";
+    }
 
     // --- ABOUT:BLANK CLOAKING ---
     function launchAboutBlank() {
       var win = window.open("about:blank", "_blank");
       if (!win) {
-        alert("Popup blocked! Please allow popups for this site to use about:blank cloaking.");
+        alert("Popup blocked! Click the popup icon in your address bar to allow popups on Chromebook.");
         return;
       }
       var doc = win.document;
       doc.open();
       doc.write('<!DOCTYPE html><html><head><title>Google Docs</title><link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"></head><body style="margin:0;padding:0;overflow:hidden;"><iframe src="' + window.location.href + '" style="width:100vw;height:100vh;border:none;"></iframe></body></html>');
       doc.close();
+    }
+
+    // --- DOWNLOAD STANDALONE HTML FILE (FOR CHROMEBOOK OFFLINE USE) ---
+    function downloadStandaloneFile() {
+      var htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      var blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "GhostCloak_Chromebook.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      alert("Downloaded GhostCloak_Chromebook.html!\n\nYou can open it on your Chromebook directly from the Files app by double clicking it or pressing Ctrl + O!");
     }
 
     // --- YOUTUBE EXTRACTOR & MULTI-ENGINE ---
@@ -625,7 +878,6 @@
         return;
       }
 
-      // Query public search API
       var resultsContainer = document.getElementById("ytResults");
       resultsContainer.innerHTML = '<div style="color:var(--text-muted); font-size:13px;">Searching videos...</div>';
 
@@ -635,8 +887,7 @@
           renderSearchResults(data.items || []);
         })
         .catch(function(err) {
-          // Fallback search suggestions
-          resultsContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Search API temporarily rate limited. Paste any direct YouTube link or video ID above to play immediately!</div>';
+          resultsContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Public search API rate limited. Paste any direct YouTube link or video ID above to play immediately!</div>';
         });
     }
 
@@ -671,20 +922,20 @@
       switchEngine(activeEngine);
     }
 
+    // Rotating School Mirrors
+    var mirrors = {
+      "yt": "https://www.youtube.com/embed/",
+      "piped": "https://piped.video/embed/",
+      "inv": "https://inv.nadeko.net/embed/",
+      "inv2": "https://invidious.nerdvpn.de/embed/",
+      "inv3": "https://yewtu.be/embed/"
+    };
+
     function switchEngine(engine) {
       activeEngine = engine;
       var frame = document.getElementById("mainPlayerFrame");
-      var src = "";
-      if (engine === "yt") {
-        src = "https://www.youtube.com/embed/" + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
-      } else if (engine === "piped") {
-        src = "https://piped.video/embed/" + currentVideoId + "?autoplay=1";
-      } else if (engine === "inv") {
-        src = "https://inv.nadeko.net/embed/" + currentVideoId + "?autoplay=1";
-      } else if (engine === "inv2") {
-        src = "https://invidious.nerdvpn.de/embed/" + currentVideoId + "?autoplay=1";
-      }
-      frame.src = src;
+      var base = mirrors[engine] || mirrors["yt"];
+      frame.src = base + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
 
       document.querySelectorAll(".engine-tab").forEach(function(b) { b.classList.remove("active"); });
       var btn = document.getElementById("eng-" + engine);
@@ -716,13 +967,6 @@
       var u = document.getElementById("proxyUrlInput").value.trim();
       if (!u) return;
       if (!u.startsWith("http://") && !u.startsWith("https://")) u = "https://" + u;
-      
-      // If local proxy detected, use it
-      if (window.hasLocalProxy) {
-        window.location.href = "http://127.0.0.1:8080/browse?url=" + encodeURIComponent(u);
-        return;
-      }
-      // Otherwise open via about:blank with CORS frame
       quickWeb(u);
     }
 
@@ -735,37 +979,14 @@
       var u = document.getElementById("proxyUrlInput").value.trim();
       if (!u.startsWith("http://") && !u.startsWith("https://")) u = "https://" + u;
       var win = window.open("about:blank", "_blank");
-      if (!win) { alert("Allow popups to launch About:Blank"); return; }
+      if (!win) { alert("Allow popups on Chromebook to launch About:Blank"); return; }
       win.document.write('<!DOCTYPE html><html><head><title>Wikipedia</title><link rel="icon" href="https://en.wikipedia.org/static/favicon/wikipedia.ico"></head><body style="margin:0;padding:0;"><iframe src="' + u + '" style="width:100vw;height:100vh;border:none;"></iframe></body></html>');
       win.document.close();
     }
 
-    // --- LOCAL DAEMON AUTO-DETECTION ---
-    function testLocalServer() {
-      fetch("http://127.0.0.1:8080/api/status")
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          window.hasLocalProxy = true;
-          document.getElementById("clientStatusText").innerText = "Local Proxy (127.0.0.1:8080) Connected";
-          document.getElementById("clientStatusBadge").style.background = "rgba(16, 185, 129, 0.25)";
-          alert("✓ Connected to local proxy server on 127.0.0.1:8080!\nUptime: " + d.uptime_seconds + "s | Requests: " + d.requests_handled);
-        })
-        .catch(function(e) {
-          alert("Local proxy daemon is not running on 127.0.0.1:8080.\nRunning in 100% Client-Side Mode!");
-        });
-    }
-
-    // Auto-ping local proxy on load
-    fetch("http://127.0.0.1:8080/api/status")
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        window.hasLocalProxy = true;
-        document.getElementById("clientStatusText").innerText = "Local Proxy Connected";
-      })
-      .catch(function(e) {});
-
-    // Initial search
+    // Auto-search initial query
     searchOrPlay();
+    setDecoyTemplate("docs");
   </script>
 </body>
 </html>
