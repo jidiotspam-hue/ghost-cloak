@@ -220,6 +220,13 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 STATS["bytes_transferred"] += total_bytes
             upstream_sock.close()
 
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "*")
+        self.end_headers()
+
     def do_GET(self):
         self._handle_http_request("GET")
 
@@ -241,6 +248,26 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
         if path in ("/", "/index.html"):
             self._serve_dashboard()
+        elif path == "/api/health":
+            res = json.dumps({"status": "healthy", "service": "GhostCloak Proxy Engine", "port": PORT, "timestamp": time.time()}).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Length", str(len(res)))
+            self.end_headers()
+            self.wfile.write(res)
+            return
+        elif path == "/api/search":
+            query = urllib.parse.parse_qs(parsed.query).get("q", ["trending"])[0]
+            results = search_yt(query)
+            res = json.dumps({"query": query, "items": results}).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Length", str(len(res)))
+            self.end_headers()
+            self.wfile.write(res)
+            return
         elif path in ("/youtube", "/yt"):
             query = urllib.parse.parse_qs(parsed.query)
             vid = query.get("v", [None])[0]

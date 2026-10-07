@@ -968,25 +968,42 @@
       </div>
     </div>
 
-    <!-- SECTION 5: CLIENT WEB GATEWAY -->
+    <!-- SECTION 5: CLIENT WEB GATEWAY & INLINE BROWSER -->
     <div class="card" style="border-color: rgba(59, 130, 246, 0.4); background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%), var(--card);">
-      <h2>🌐 Client-Side Web Gateway &amp; Unblocked Hub</h2>
+      <h2>🌐 Client-Side Web Gateway &amp; Sandbox Hub</h2>
       <p>
-        Browse through client-side sandbox iframes or launch directly into an <code>about:blank</code> cloak:
+        Browse through client-side sandbox iframes, launch into an <code>about:blank</code> cloak, or test live connectivity:
       </p>
 
       <div class="search-row">
         <input class="search-input" id="proxyUrlInput" type="text" placeholder="Enter target website URL or search keywords..." value="https://news.ycombinator.com" onkeydown="if(event.key==='Enter') launchWebProxy();" />
-        <button class="btn" onclick="launchWebProxy()">Launch Gateway &rarr;</button>
+        <button class="btn" onclick="launchWebProxy()">Launch Inline &rarr;</button>
         <button class="btn btn-sec" onclick="launchAboutBlankWeb()">About:Blank</button>
       </div>
 
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-        <span style="font-size:12px; color:var(--text-muted); align-self:center;">Quick unblocked sites:</span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
+        <span style="font-size:12px; color:var(--text-muted);">Quick shortcuts:</span>
         <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://news.ycombinator.com')">Hacker News</button>
         <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://en.wikipedia.org')">Wikipedia</button>
         <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://lichess.org')">Lichess</button>
         <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://ipinfo.io/json')">IP Info</button>
+      </div>
+
+      <!-- INLINE SANDBOX CONTAINER -->
+      <div id="inlineWebWrap" style="display:none; margin-top:14px; background:#030712; border:1px solid #1f2937; border-radius:10px; overflow:hidden;">
+        <div style="background:#111827; padding:8px 14px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1f2937;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+            <span id="inlineWebTitle" style="font-size:12px; font-weight:600; color:#cbd5e1; max-width:320px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Sandbox Gateway</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sec" style="padding:3px 8px; font-size:11px;" onclick="openInlineInBlank()">Popout Blank</button>
+            <button class="btn btn-sec" style="padding:3px 8px; font-size:11px;" onclick="closeInlineWeb()">✕ Close</button>
+          </div>
+        </div>
+        <div style="height:480px; width:100%; position:relative; background:#fff;">
+          <iframe id="inlineWebFrame" src="" style="width:100%; height:100%; border:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
       </div>
     </div>
 
@@ -2044,20 +2061,39 @@
       }
 
       var resultsContainer = document.getElementById("ytResults");
-      resultsContainer.innerHTML = '<div style="color:var(--text-muted); font-size:13px;">Searching videos across mirrors...</div>';
+      resultsContainer.innerHTML = '<div style="color:var(--text-muted); font-size:13px;">Searching videos across mirrors &amp; backend...</div>';
 
-      fetch("https://api.piped.private.coffee/search?q=" + encodeURIComponent(q) + "&filter=videos")
+      // Tier 1: Check if local proxy server backend is running on 127.0.0.1:8080
+      fetch("http://127.0.0.1:8080/api/search?q=" + encodeURIComponent(q), { mode: 'cors' })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          renderSearchResults(data.items || []);
+          if (data && data.items && data.items.length > 0) {
+            renderSearchResults(data.items);
+          } else {
+            throw new Error("No backend results");
+          }
         })
-        .catch(function(err) {
-          // Secondary fallback
-          fetch("https://inv.nadeko.net/api/v1/search?q=" + encodeURIComponent(q))
+        .catch(function() {
+          // Tier 2: Public Piped private mirror
+          fetch("https://api.piped.private.coffee/search?q=" + encodeURIComponent(q) + "&filter=videos")
             .then(function(r) { return r.json(); })
-            .then(function(items) { renderSearchResults(items || []); })
+            .then(function(data) {
+              renderSearchResults(data.items || []);
+            })
             .catch(function() {
-              resultsContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Direct search rate-limited. Paste any direct YouTube link or video ID above to play immediately!</div>';
+              // Tier 3: Invidious secondary mirror
+              fetch("https://inv.nadeko.net/api/v1/search?q=" + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(items) { renderSearchResults(items || []); })
+                .catch(function() {
+                  // Tier 4: Yewtube tertiary mirror
+                  fetch("https://yewtu.be/api/v1/search?q=" + encodeURIComponent(q))
+                    .then(function(r) { return r.json(); })
+                    .then(function(items) { renderSearchResults(items || []); })
+                    .catch(function() {
+                      resultsContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Direct search mirrors busy. Paste any direct YouTube link or video ID above to play immediately!</div>';
+                    });
+                });
             });
         });
     }
@@ -2180,21 +2216,43 @@
           u = "https://" + u;
         }
       }
-      quickWeb(u);
+      var wrap = document.getElementById("inlineWebWrap");
+      var frame = document.getElementById("inlineWebFrame");
+      var title = document.getElementById("inlineWebTitle");
+      if (wrap && frame) {
+        frame.src = u;
+        if (title) title.innerText = "Gateway: " + u;
+        wrap.style.display = "block";
+        wrap.scrollIntoView({ behavior: 'smooth' });
+        showToast("Gateway sandbox loaded: " + u);
+      } else {
+        quickWeb(u);
+      }
     }
 
     function quickWeb(url) {
       document.getElementById("proxyUrlInput").value = url;
-      launchAboutBlankWeb();
+      launchWebProxy();
     }
 
-    function launchAboutBlankWeb() {
+    function openInlineInBlank() {
       var u = document.getElementById("proxyUrlInput").value.trim();
       if (!u.startsWith("http://") && !u.startsWith("https://")) u = "https://" + u;
       var win = window.open("about:blank", "_blank");
       if (!win) { alert("Allow popups on Chromebook to launch About:Blank"); return; }
       win.document.write('<!DOCTYPE html><html><head><title>Wikipedia</title><link rel="icon" href="https://en.wikipedia.org/static/favicon/wikipedia.ico"></head><body style="margin:0;padding:0;"><iframe src="' + u + '" style="width:100vw;height:100vh;border:none;"></iframe></body></html>');
       win.document.close();
+    }
+
+    function closeInlineWeb() {
+      var wrap = document.getElementById("inlineWebWrap");
+      var frame = document.getElementById("inlineWebFrame");
+      if (frame) frame.src = "";
+      if (wrap) wrap.style.display = "none";
+    }
+
+    function launchAboutBlankWeb() {
+      openInlineInBlank();
     }
 
     function showToast(msg) {

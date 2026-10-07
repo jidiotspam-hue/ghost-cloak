@@ -83,25 +83,35 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
    - **Theater Mode**: One-click distraction-free cinema player.
 
-6. **Security, Sensors & Cloaking**:
-   - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
-   - **Force-Close Prevention (`onbeforeunload`)**: Optional prompt before leaving to block monitoring tools or accidental tab closure.
-   - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
-   - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"` or the Canvas `"C"` logo quietly unlocks the hub without touching the keyboard.
+10. **Client-Side Web Gateway & Sandbox Hub**:
+    - Embedded inline iframe browser sandbox with popout and close controls.
+    - Quick pre-configured shortcuts for Hacker News, Wikipedia, Lichess, and IP Info.
+    - Full `about:blank` history-cloaked popout mode.
 
-6. **`about:blank` Cloaking**:
-   - Spawns the entire unblocker inside an `about:blank` window.
-   - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
-   - Leaves **zero history** in `chrome://history`.
+11. **Security, Sensors & Cloaking**:
+    - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
+    - **Force-Close Prevention (`onbeforeunload`)**: Optional prompt before leaving to block monitoring tools or accidental tab closure.
+    - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
+    - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"`, the Canvas `"C"` logo, or the Wikipedia `"📖"` icon quietly unlocks the hub without touching the keyboard.
 
-7. **Lightspeed Systems Stealth Optimizations**:
-   - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
-   - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
-   - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
-   - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
+12. **`about:blank` Cloaking**:
+    - Spawns the entire unblocker inside an `about:blank` window.
+    - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
+    - Leaves **zero history** in `chrome://history`.
 
-8. **Rotating School Wi-Fi Mirrors**:
-   - Built-in multi-mirror fallback (NoCookie, YouTube HD, Piped, Invidious Mirrors 1, 2, 3) ensuring uninterrupted streaming even if the school network filters common domains.
+13. **Lightspeed Systems Stealth Optimizations**:
+    - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
+    - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
+    - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
+    - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
+
+14. **Multi-Tier Rotating School Wi-Fi Mirrors & Backend Synergy**:
+    - Multi-tier search fallback pipeline:
+      1. Local backend API search (`127.0.0.1:8080/api/search`) via Python `yt-dlp` engine.
+      2. Public Piped private mirror.
+      3. Invidious secondary mirror.
+      4. Yewtube tertiary mirror.
+    - Complete CORS preflight (`OPTIONS`) support across all backend endpoints.
 
 ---
 
