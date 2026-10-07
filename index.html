@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="tabTitle">GhostCloak &bull; Client-Side Stealth Unblocker</title>
+  <link id="tabFavicon" rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --card-border: #1f2937;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #10b981;
+      --yt-red: #ef4444;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --code-bg: #030712;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* TOP HEADER */
+    header {
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      gap: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    select.cloak-select {
+      background: var(--code-bg);
+      border: 1px solid #374151;
+      color: #e5e7eb;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .btn-panic {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-panic:hover { background: #b91c1c; }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1120px;
+      width: 100%;
+      margin: 24px auto;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f3f4f6;
+    }
+    .card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* SEARCH & URL BAR */
+    .search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--code-bg);
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--primary); }
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-yt { background: var(--yt-red); }
+    .btn-yt:hover { background: #dc2626; }
+    .btn-sec {
+      background: #1f2937;
+      color: #d1d5db;
+      border: 1px solid #374151;
+    }
+    .btn-sec:hover { background: #374151; color: #fff; }
+    .btn-cloak {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .btn-cloak:hover { background: linear-gradient(135deg, #059669, #047857); }
+
+    /* PLAYER AREA */
+    #playerContainer {
+      display: none;
+      margin-top: 18px;
+      background: #030712;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1f2937;
+    }
+    .player-header {
+      background: #111827;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1f2937;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .engine-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .engine-tab {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .engine-tab:hover { background: #374151; color: #fff; }
+    .engine-tab.active { background: var(--yt-red); color: #fff; border-color: var(--yt-red); }
+    .video-frame-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    .video-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .player-meta {
+      padding: 16px;
+      background: #111827;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .player-title { font-size: 16px; font-weight: 700; color: #fff; }
+
+    /* SEARCH RESULTS GRID */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .yt-card {
+      background: #131d31;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .yt-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--yt-red);
+    }
+    .thumb-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+    .thumb-wrap img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .thumb-dur {
+      position: absolute;
+      bottom: 6px; right: 6px;
+      background: rgba(0,0,0,0.85);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .yt-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+    .yt-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .yt-card-sub { font-size: 11px; color: var(--text-muted); }
+
+    /* DECOY FULLSCREEN OVERLAY (PANIC MODE) */
+    #decoyOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #f8f9fa;
+      color: #202124;
+      z-index: 999999;
+      display: none;
+      flex-direction: column;
+      font-family: Roboto, Arial, sans-serif;
+    }
+    .docs-nav {
+      background: #fff;
+      border-bottom: 1px solid #dadce0;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .docs-icon {
+      width: 34px; height: 34px;
+      background: #4285f4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .docs-title-wrap { flex: 1; }
+    .docs-title { font-size: 17px; font-weight: 500; outline: none; }
+    .docs-menu { display: flex; gap: 14px; font-size: 13px; color: #3c4043; margin-top: 4px; }
+    .docs-toolbar {
+      background: #edf2fc;
+      border-radius: 24px;
+      margin: 8px 18px;
+      padding: 6px 16px;
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: #444746;
+      align-items: center;
+    }
+    .docs-sheet-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 16px;
+      background: #f8f9fa;
+    }
+    .docs-page {
+      max-width: 760px;
+      min-height: 900px;
+      background: #fff;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 1px 3px rgba(60,64,67,.3);
+      padding: 72px 72px;
+      outline: none;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #333;
+    }
+    .panic-restore-hint {
+      position: fixed;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      opacity: 0.25;
+      transition: opacity 0.2s;
+    }
+    .panic-restore-hint:hover { opacity: 0.9; cursor: pointer; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <a href="#" class="logo">
+      <div class="logo-badge">👻</div>
+      <span>GhostCloak &bull; Client-Side Hub</span>
+    </a>
+    <div class="header-actions">
+      <div class="status-badge" id="clientStatusBadge">
+        <div class="status-dot"></div>
+        <span id="clientStatusText">Client Engine Active</span>
+      </div>
+
+      <select class="cloak-select" id="tabCloakSelect" onchange="switchTabCloak(this.value)">
+        <option value="default">🛡️ Tab Cloak: Default</option>
+        <option value="docs">📄 Google Docs</option>
+        <option value="drive">📁 Google Drive</option>
+        <option value="canvas">🎓 Canvas LMS</option>
+        <option value="wiki">📖 Wikipedia</option>
+      </select>
+
+      <button class="btn btn-sec" onclick="launchAboutBlank()" title="Opens inside about:blank leaving zero browser history">
+        About:Blank
+      </button>
+
+      <button class="btn-panic" onclick="togglePanicMode()" title="Hotkey: ESC key">
+        🚨 Panic Cover (ESC)
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <div class="container">
+
+    <!-- SECTION 1: YOUTUBE DIRECT UNBLOCKER -->
+    <div class="card" style="border-color: rgba(239, 68, 68, 0.4); background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.08), transparent 70%), var(--card);">
+      <h2>▶️ YouTube Multi-Engine Unblocker</h2>
+      <p>
+        Runs 100% locally on your device. Paste any video link (youtube.com, youtu.be, shorts), enter a video ID, or search keywords to stream with zero blocks:
+      </p>
+
+      <div class="search-row">
+        <input class="search-input" id="ytQuery" type="text" placeholder="Paste YouTube URL / Video ID or search keywords (e.g. lofi hip hop, mrbeast, music)..." value="lofi beats" onkeydown="if(event.key==='Enter') searchOrPlay();" />
+        <button class="btn btn-yt" onclick="searchOrPlay()">▶️ Play / Search</button>
+      </div>
+
+      <!-- EMBEDDED PLAYER -->
+      <div id="playerContainer">
+        <div class="player-header">
+          <div class="engine-tabs">
+            <button class="engine-tab active" id="eng-yt" onclick="switchEngine('yt')">▶️ YouTube HD</button>
+            <button class="engine-tab" id="eng-piped" onclick="switchEngine('piped')">🛡️ Piped (Ad-Free)</button>
+            <button class="engine-tab" id="eng-inv" onclick="switchEngine('inv')">🌐 Invidious</button>
+            <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="closePlayer()">✕ Close</button>
+          </div>
+        </div>
+        <div class="video-frame-wrap">
+          <iframe id="mainPlayerFrame" 
+                  src="" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                  allowfullscreen 
+                  referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+        </div>
+        <div class="player-meta">
+          <div class="player-title" id="activeVidTitle">Video Player Active</div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sec" style="padding:6px 12px; font-size:12px;" onclick="copyPlayerLink()">📋 Copy Link</button>
+            <button class="btn btn-sec" style="padding:6px 12px; font-size:12px;" onclick="openPlayerInBlank()">🔲 Open in About:Blank</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEARCH CARDS -->
+      <div class="results-grid" id="ytResults"></div>
+    </div>
+
+    <!-- SECTION 2: CLIENT WEB GATEWAY & PROXY -->
+    <div class="card" style="border-color: rgba(59, 130, 246, 0.4); background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%), var(--card);">
+      <h2>🌐 Client-Side Web Gateway</h2>
+      <p>
+        Browse through client-side sandbox iframes or route through your local background proxy if active on your machine:
+      </p>
+
+      <div class="search-row">
+        <input class="search-input" id="proxyUrlInput" type="text" placeholder="Enter target website URL (e.g. https://news.ycombinator.com or https://example.com)" value="https://news.ycombinator.com" onkeydown="if(event.key==='Enter') launchWebProxy();" />
+        <button class="btn" onclick="launchWebProxy()">Launch Gateway &rarr;</button>
+        <button class="btn btn-sec" onclick="launchAboutBlankWeb()">About:Blank</button>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+        <span style="font-size:12px; color:var(--text-muted); align-self:center;">Quick sites:</span>
+        <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://news.ycombinator.com')">Hacker News</button>
+        <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://en.wikipedia.org')">Wikipedia</button>
+        <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://example.com')">Example Domain</button>
+        <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="quickWeb('https://ipinfo.io/json')">IP Info</button>
+      </div>
+    </div>
+
+    <!-- SECTION 3: HARDWARE GRAPHICS CLOAK (MACOS APP) -->
+    <div class="card" style="border-color: rgba(16, 185, 129, 0.4); background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 70%), var(--card);">
+      <h2>👻 Hardware Graphics Screen Cloak (macOS WindowServer Level)</h2>
+      <p>
+        Want your screen completely invisible to digital screen capture (Zoom, Microsoft Teams, Discord, GoGuardian, Screen Recorders)?
+        Our companion native macOS utility uses <code>NSWindow.sharingType = .none</code> to strip your real window from digital framebuffers while rendering an authentic Decoy Tab beneath it.
+      </p>
+
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <a class="btn btn-cloak" href="https://github.com/jidiotspam-hue/ghost-cloak" target="_blank">
+          📦 View GitHub Repo &amp; macOS Binary &rarr;
+        </a>
+        <button class="btn btn-sec" onclick="testLocalServer()">
+          🔄 Test Local Daemon Connection
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DECOY FULLSCREEN OVERLAY (PANIC SCREEN) -->
+  <div id="decoyOverlay">
+    <div class="docs-nav">
+      <div class="docs-icon">📄</div>
+      <div class="docs-title-wrap">
+        <div class="docs-title" contenteditable="true">Cellular Respiration and Mitochondrial Bioenergetics</div>
+        <div class="docs-menu">
+          <span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Extensions</span><span>Help</span>
+        </div>
+      </div>
+    </div>
+    <div class="docs-toolbar">
+      <span>↶</span><span>↷</span><span>🖨️</span><span>100%</span><span>Normal text</span><span>Arial</span><span>11</span><span><b>B</b></span><span><i>I</i></span><span><u>U</u></span><span>Align</span><span>List</span>
+    </div>
+    <div class="docs-sheet-container">
+      <div class="docs-page" contenteditable="true">
+        <h1 style="font-size:22px; margin-bottom:14px;">1. Overview of Mitochondrial ATP Synthesis</h1>
+        <p>Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.</p>
+        <p>The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.</p>
+        <h2 style="font-size:18px; margin:20px 0 10px 0;">2. Key Regulatory Checkpoints</h2>
+        <p>Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.</p>
+        <p>Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.</p>
+      </div>
+    </div>
+    <div class="panic-restore-hint" onclick="togglePanicMode()">
+      Press ESC or click here to resume
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    GhostCloak Client Suite &bull; Zero Server Footprint &bull; Hosted on GitHub Pages
+  </footer>
+
+  <script>
+    var currentVideoId = "dQw4w9WgXcQ";
+    var activeEngine = "yt";
+
+    // --- TAB CLOAKING ---
+    var disguises = {
+      "default": { title: "GhostCloak • Client-Side Stealth Unblocker", icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" },
+      "docs": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+      "drive": { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+      "canvas": { title: "Dashboard | Canvas LMS", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+      "wiki": { title: "Wikipedia, the free encyclopedia", icon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" }
+    };
+
+    function switchTabCloak(key) {
+      var d = disguises[key] || disguises["default"];
+      document.title = d.title;
+      var link = document.getElementById("tabFavicon");
+      if (link) link.href = d.icon;
+    }
+
+    // --- PANIC / BOSS KEY (ESC) ---
+    function togglePanicMode() {
+      var overlay = document.getElementById("decoyOverlay");
+      if (overlay.style.display === "flex") {
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+      } else {
+        overlay.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        switchTabCloak("docs");
+      }
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        togglePanicMode();
+      }
+    });
+
+    // --- ABOUT:BLANK CLOAKING ---
+    function launchAboutBlank() {
+      var win = window.open("about:blank", "_blank");
+      if (!win) {
+        alert("Popup blocked! Please allow popups for this site to use about:blank cloaking.");
+        return;
+      }
+      var doc = win.document;
+      doc.open();
+      doc.write('<!DOCTYPE html><html><head><title>Google Docs</title><link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"></head><body style="margin:0;padding:0;overflow:hidden;"><iframe src="' + window.location.href + '" style="width:100vw;height:100vh;border:none;"></iframe></body></html>');
+      doc.close();
+    }
+
+    // --- YOUTUBE EXTRACTOR & MULTI-ENGINE ---
+    function extractVideoId(input) {
+      if (!input) return null;
+      var clean = input.trim();
+      var m = clean.match(/(?:v=|\/embed\/|youtu\.be\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+      if (m && m[1]) return m[1];
+      if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
+      return null;
+    }
+
+    function searchOrPlay() {
+      var q = document.getElementById("ytQuery").value.trim();
+      if (!q) return;
+
+      var vid = extractVideoId(q);
+      if (vid) {
+        playVideo(vid, "YouTube Video (" + vid + ")");
+        return;
+      }
+
+      // Query public search API
+      var resultsContainer = document.getElementById("ytResults");
+      resultsContainer.innerHTML = '<div style="color:var(--text-muted); font-size:13px;">Searching videos...</div>';
+
+      fetch("https://api.piped.private.coffee/search?q=" + encodeURIComponent(q) + "&filter=videos")
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          renderSearchResults(data.items || []);
+        })
+        .catch(function(err) {
+          // Fallback search suggestions
+          resultsContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Search API temporarily rate limited. Paste any direct YouTube link or video ID above to play immediately!</div>';
+        });
+    }
+
+    function renderSearchResults(items) {
+      var container = document.getElementById("ytResults");
+      if (!items || items.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px;">No results found.</div>';
+        return;
+      }
+      var html = "";
+      items.slice(0, 12).forEach(function(item) {
+        var vid = (item.url || "").replace("/watch?v=", "");
+        if (!vid) return;
+        var thumb = item.thumbnail || "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg";
+        var dur = item.duration ? Math.floor(item.duration / 60) + ":" + (item.duration % 60 < 10 ? "0" : "") + (item.duration % 60) : "";
+        var uploader = item.uploaderName || "";
+        var safeTitle = (item.title || "Video").replace(/"/g, '&quot;');
+
+        html += '<div class="yt-card" onclick="playVideo(\'' + vid + '\', \'' + safeTitle + '\')">';
+        html += '<div class="thumb-wrap"><img src="' + thumb + '" loading="lazy" alt="" /><span class="thumb-dur">' + dur + '</span></div>';
+        html += '<div class="yt-card-body"><div class="yt-card-title">' + safeTitle + '</div><div class="yt-card-sub">' + uploader + '</div></div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function playVideo(vid, title) {
+      currentVideoId = vid;
+      document.getElementById("activeVidTitle").innerText = title || ("Video: " + vid);
+      document.getElementById("playerContainer").style.display = "block";
+      document.getElementById("playerContainer").scrollIntoView({ behavior: 'smooth' });
+      switchEngine(activeEngine);
+    }
+
+    function switchEngine(engine) {
+      activeEngine = engine;
+      var frame = document.getElementById("mainPlayerFrame");
+      var src = "";
+      if (engine === "yt") {
+        src = "https://www.youtube.com/embed/" + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
+      } else if (engine === "piped") {
+        src = "https://piped.video/embed/" + currentVideoId + "?autoplay=1";
+      } else if (engine === "inv") {
+        src = "https://inv.nadeko.net/embed/" + currentVideoId + "?autoplay=1";
+      } else if (engine === "inv2") {
+        src = "https://invidious.nerdvpn.de/embed/" + currentVideoId + "?autoplay=1";
+      }
+      frame.src = src;
+
+      document.querySelectorAll(".engine-tab").forEach(function(b) { b.classList.remove("active"); });
+      var btn = document.getElementById("eng-" + engine);
+      if (btn) btn.classList.add("active");
+    }
+
+    function closePlayer() {
+      var frame = document.getElementById("mainPlayerFrame");
+      frame.src = "";
+      document.getElementById("playerContainer").style.display = "none";
+    }
+
+    function copyPlayerLink() {
+      var link = "https://www.youtube.com/watch?v=" + currentVideoId;
+      navigator.clipboard.writeText(link);
+      alert("YouTube Link Copied: " + link);
+    }
+
+    function openPlayerInBlank() {
+      var win = window.open("about:blank", "_blank");
+      if (!win) { alert("Popup blocked! Allow popups to use this."); return; }
+      var embed = "https://www.youtube.com/embed/" + currentVideoId + "?autoplay=1";
+      win.document.write('<!DOCTYPE html><html><head><title>Google Docs</title><link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"></head><body style="margin:0;background:#000;"><iframe src="' + embed + '" style="width:100vw;height:100vh;border:none;" allowfullscreen></iframe></body></html>');
+      win.document.close();
+    }
+
+    // --- CLIENT WEB GATEWAY ---
+    function launchWebProxy() {
+      var u = document.getElementById("proxyUrlInput").value.trim();
+      if (!u) return;
+      if (!u.startsWith("http://") && !u.startsWith("https://")) u = "https://" + u;
+      
+      // If local proxy detected, use it
+      if (window.hasLocalProxy) {
+        window.location.href = "http://127.0.0.1:8080/browse?url=" + encodeURIComponent(u);
+        return;
+      }
+      // Otherwise open via about:blank with CORS frame
+      quickWeb(u);
+    }
+
+    function quickWeb(url) {
+      document.getElementById("proxyUrlInput").value = url;
+      launchAboutBlankWeb();
+    }
+
+    function launchAboutBlankWeb() {
+      var u = document.getElementById("proxyUrlInput").value.trim();
+      if (!u.startsWith("http://") && !u.startsWith("https://")) u = "https://" + u;
+      var win = window.open("about:blank", "_blank");
+      if (!win) { alert("Allow popups to launch About:Blank"); return; }
+      win.document.write('<!DOCTYPE html><html><head><title>Wikipedia</title><link rel="icon" href="https://en.wikipedia.org/static/favicon/wikipedia.ico"></head><body style="margin:0;padding:0;"><iframe src="' + u + '" style="width:100vw;height:100vh;border:none;"></iframe></body></html>');
+      win.document.close();
+    }
+
+    // --- LOCAL DAEMON AUTO-DETECTION ---
+    function testLocalServer() {
+      fetch("http://127.0.0.1:8080/api/status")
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          window.hasLocalProxy = true;
+          document.getElementById("clientStatusText").innerText = "Local Proxy (127.0.0.1:8080) Connected";
+          document.getElementById("clientStatusBadge").style.background = "rgba(16, 185, 129, 0.25)";
+          alert("✓ Connected to local proxy server on 127.0.0.1:8080!\nUptime: " + d.uptime_seconds + "s | Requests: " + d.requests_handled);
+        })
+        .catch(function(e) {
+          alert("Local proxy daemon is not running on 127.0.0.1:8080.\nRunning in 100% Client-Side Mode!");
+        });
+    }
+
+    // Auto-ping local proxy on load
+    fetch("http://127.0.0.1:8080/api/status")
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        window.hasLocalProxy = true;
+        document.getElementById("clientStatusText").innerText = "Local Proxy Connected";
+      })
+      .catch(function(e) {});
+
+    // Initial search
+    searchOrPlay();
+  </script>
+</body>
+</html>
