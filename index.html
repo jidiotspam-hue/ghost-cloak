@@ -618,6 +618,14 @@
         <span id="clientStatusText">Active Study Session &bull; Lightspeed Protected</span>
       </div>
 
+      <!-- POMODORO STUDY TIMER -->
+      <div style="display:inline-flex; align-items:center; gap:6px; background:#1f2937; padding:4px 10px; border-radius:20px; border:1px solid #374151; font-size:12px; font-weight:600;">
+        <span id="pomoLabel" style="color:#60a5fa;">⏱️ Focus:</span>
+        <span id="pomoDisplay" style="font-family:monospace; font-size:13px; color:#fff;">25:00</span>
+        <button id="pomoBtn" onclick="togglePomodoro()" style="background:#3b82f6; color:#fff; border:none; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer;" title="Start/Pause">▶</button>
+        <button onclick="resetPomodoro()" style="background:none; border:none; color:#9ca3af; font-size:11px; cursor:pointer;" title="Reset Timer">⟲</button>
+      </div>
+
       <select class="cloak-select" id="tabCloakSelect" onchange="switchTabCloak(this.value)">
         <option value="docs">📄 Google Docs (Default)</option>
         <option value="drive">📁 Google Drive</option>
@@ -842,7 +850,58 @@
       </div>
     </div>
 
-    <!-- SECTION 4: CLIENT WEB GATEWAY -->
+    <!-- SECTION 4: STUDY FOCUS SOUND STUDIO -->
+    <div class="card" style="border-color: rgba(56, 189, 248, 0.4); background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 70%), var(--card);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+        <h2>🎧 Study Focus Sound Studio &bull; Ambient Sound Engine</h2>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span style="font-size: 12px; color: var(--text-muted);">Master:</span>
+          <input type="range" id="ambientMasterVol" min="0" max="100" value="70" oninput="setAmbientMasterVol(this.value)" style="width: 80px; height: 5px; accent-color: #38bdf8; cursor: pointer;" title="Master Volume" />
+        </div>
+      </div>
+      <p>
+        Real-time procedural ambient sound generator built directly via Web Audio API. 100% offline, synthesizes realistic background textures and focus frequencies to maximize study retention:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 14px;">
+        <!-- Track 1: Gentle Rain -->
+        <div style="background: #1f2937; border: 1px solid #374151; padding: 14px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #93c5fd;">🌧️ Gentle Rain</span>
+            <button class="btn btn-sec" id="btnSoundRain" style="padding: 3px 10px; font-size: 11px;" onclick="toggleAmbientSound('rain')">▶ Play</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Filtered pink noise rain simulation</div>
+          <input type="range" id="volRain" min="0" max="100" value="60" oninput="setSoundVol('rain', this.value)" style="width: 100%; height: 4px; accent-color: #60a5fa;" />
+        </div>
+
+        <!-- Track 2: Ocean Tides -->
+        <div style="background: #1f2937; border: 1px solid #374151; padding: 14px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #34d399;">🌊 Ocean Tides</span>
+            <button class="btn btn-sec" id="btnSoundOcean" style="padding: 3px 10px; font-size: 11px;" onclick="toggleAmbientSound('ocean')">▶ Play</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Low-frequency rhythmic ocean swell</div>
+          <input type="range" id="volOcean" min="0" max="100" value="50" oninput="setSoundVol('ocean', this.value)" style="width: 100%; height: 4px; accent-color: #34d399;" />
+        </div>
+
+        <!-- Track 3: 40Hz Gamma Focus (Binaural Beats) -->
+        <div style="background: #1f2937; border: 1px solid #374151; padding: 14px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #f472b6;">🧠 40Hz Gamma Focus</span>
+            <button class="btn btn-sec" id="btnSoundBinaural" style="padding: 3px 10px; font-size: 11px;" onclick="toggleAmbientSound('binaural')">▶ Play</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Binaural frequency wave for deep focus</div>
+          <input type="range" id="volBinaural" min="0" max="100" value="40" oninput="setSoundVol('binaural', this.value)" style="width: 100%; height: 4px; accent-color: #f472b6;" />
+        </div>
+      </div>
+
+      <!-- Live Wave Canvas Visualizer -->
+      <div style="margin-top: 14px; background: #030712; border-radius: 8px; border: 1px solid #1f2937; padding: 8px; height: 44px; position: relative;">
+        <canvas id="ambientWaveCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
+      </div>
+    </div>
+
+    <!-- SECTION 5: CLIENT WEB GATEWAY -->
     <div class="card" style="border-color: rgba(59, 130, 246, 0.4); background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%), var(--card);">
       <h2>🌐 Client-Side Web Gateway &amp; Unblocked Hub</h2>
       <p>
@@ -919,6 +978,30 @@
         <span style="border-left:1px solid #ccc; height:16px;"></span>
         <button class="docs-btn" onclick="formatDoc('justifyLeft')">Left</button>
         <button class="docs-btn" onclick="formatDoc('justifyCenter')">Center</button>
+        <span style="border-left:1px solid #ccc; height:16px;"></span>
+        <span style="font-size:12px; color:#5f6368; display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="togglePomodoro()" title="Toggle Study Timer">
+          ⏱️ <span id="docPomoDisplay" style="font-weight:700; color:#1a73e8;">25:00</span>
+        </span>
+        <button class="docs-btn" style="background:#e8f0fe; color:#1a73e8; font-weight:600; font-size:11px; margin-left:auto; display:flex; align-items:center; gap:4px;" onclick="toggleGhostPip()" title="Show/Hide Floating Video Player inside Docs">
+          📺 Ghost PiP
+        </button>
+      </div>
+
+      <!-- DRAGGABLE FLOATING GHOST PIP IN DECOY -->
+      <div id="decoyGhostPip" style="position:fixed; bottom:30px; right:30px; width:360px; height:240px; background:#1e293b; border-radius:10px; box-shadow:0 10px 40px rgba(0,0,0,0.6); border:1px solid #334155; display:none; flex-direction:column; z-index:1000000; overflow:hidden; resize:both; min-width:240px; min-height:160px; max-width:680px; max-height:480px;">
+        <div id="ghostPipHeader" style="background:#0f172a; padding:6px 12px; display:flex; justify-content:space-between; align-items:center; cursor:move; user-select:none; border-bottom:1px solid #334155;">
+          <span style="font-size:11px; font-weight:600; color:#94a3b8; display:flex; align-items:center; gap:6px;">
+            <span>📺</span>
+            <span>Figure 3.1 &bull; Academic Stream</span>
+          </span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="range" id="ghostOpacityRange" min="20" max="100" value="100" oninput="setGhostOpacity(this.value)" style="width:50px; height:4px; cursor:pointer;" title="Stealth Opacity" />
+            <button onclick="toggleGhostPip()" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:12px; font-weight:bold;">✕</button>
+          </div>
+        </div>
+        <div style="flex:1; background:#000; position:relative;">
+          <iframe id="ghostPipFrame" src="" style="width:100%; height:100%; border:none;" allowfullscreen></iframe>
+        </div>
       </div>
       <div class="docs-sheet-container">
         <div class="docs-page" id="docsContent" contenteditable="true" oninput="updateWordCount()">
@@ -1966,6 +2049,416 @@
       t.innerText = msg;
       t.style.display = "block";
       setTimeout(function() { t.style.display = "none"; }, 2500);
+    }
+
+    // --- POMODORO STUDY TIMER ---
+    var pomoState = {
+      secondsLeft: 25 * 60,
+      isRunning: false,
+      isBreak: false,
+      intervalId: null
+    };
+
+    function updatePomodoroDisplay() {
+      var m = Math.floor(pomoState.secondsLeft / 60);
+      var s = pomoState.secondsLeft % 60;
+      var str = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      
+      var topDisp = document.getElementById("pomoDisplay");
+      var docDisp = document.getElementById("docPomoDisplay");
+      var label = document.getElementById("pomoLabel");
+      var btn = document.getElementById("pomoBtn");
+
+      if (topDisp) topDisp.innerText = str;
+      if (docDisp) docDisp.innerText = str;
+      if (btn) btn.innerText = pomoState.isRunning ? "⏸" : "▶";
+      if (label) {
+        label.innerText = pomoState.isBreak ? "☕ Break:" : "⏱️ Focus:";
+        label.style.color = pomoState.isBreak ? "#34d399" : "#60a5fa";
+      }
+    }
+
+    function togglePomodoro() {
+      if (pomoState.isRunning) {
+        clearInterval(pomoState.intervalId);
+        pomoState.isRunning = false;
+        showToast("Pomodoro timer paused");
+      } else {
+        pomoState.isRunning = true;
+        pomoState.intervalId = setInterval(function() {
+          if (pomoState.secondsLeft > 0) {
+            pomoState.secondsLeft--;
+            updatePomodoroDisplay();
+          } else {
+            // Timer expired
+            clearInterval(pomoState.intervalId);
+            pomoState.isRunning = false;
+            playWarningChime(); // Gentle notification chime
+            if (!pomoState.isBreak) {
+              pomoState.isBreak = true;
+              pomoState.secondsLeft = 5 * 60;
+              showToast("🎉 Great focus session! 5-minute break started.");
+            } else {
+              pomoState.isBreak = false;
+              pomoState.secondsLeft = 25 * 60;
+              showToast("🔔 Break ended. Ready for next 25-minute focus session!");
+            }
+            updatePomodoroDisplay();
+          }
+        }, 1000);
+        showToast(pomoState.isBreak ? "Break timer started" : "Focus timer started (25m)");
+      }
+      updatePomodoroDisplay();
+    }
+
+    function resetPomodoro() {
+      if (pomoState.intervalId) clearInterval(pomoState.intervalId);
+      pomoState.isRunning = false;
+      pomoState.isBreak = false;
+      pomoState.secondsLeft = 25 * 60;
+      updatePomodoroDisplay();
+      showToast("Pomodoro reset to 25:00");
+    }
+
+    // --- DRAGGABLE GHOST PIP IN DECOY ---
+    function toggleGhostPip() {
+      var pip = document.getElementById("decoyGhostPip");
+      var frame = document.getElementById("ghostPipFrame");
+      if (!pip) return;
+
+      if (pip.style.display === "flex") {
+        pip.style.display = "none";
+        if (frame) frame.src = "";
+        showToast("Ghost PiP player hidden");
+      } else {
+        pip.style.display = "flex";
+        if (frame && currentVideoId) {
+          frame.src = "https://www.youtube-nocookie.com/embed/" + currentVideoId + "?autoplay=1&rel=0";
+        } else if (frame && !frame.src) {
+          frame.src = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0";
+        }
+        showToast("Ghost PiP active inside Decoy! Drag anywhere or adjust opacity.");
+      }
+    }
+
+    function setGhostOpacity(val) {
+      var pip = document.getElementById("decoyGhostPip");
+      if (pip) {
+        pip.style.opacity = (val / 100).toString();
+      }
+    }
+
+    // Universal Draggable Helper (Supports Mouse & Touch Chromebooks)
+    function makeDraggable(element, handle) {
+      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      var dragHandle = handle || element;
+
+      dragHandle.onmousedown = dragMouseDown;
+      dragHandle.ontouchstart = dragTouchStart;
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+        element.style.bottom = "auto";
+        element.style.right = "auto";
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+
+      function dragTouchStart(e) {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+        var touch = e.touches[0];
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        document.ontouchend = closeTouchDrag;
+        document.ontouchmove = touchDrag;
+      }
+
+      function touchDrag(e) {
+        var touch = e.touches[0];
+        pos1 = pos3 - touch.clientX;
+        pos2 = pos4 - touch.clientY;
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+        element.style.bottom = "auto";
+        element.style.right = "auto";
+      }
+
+      function closeTouchDrag() {
+        document.ontouchend = null;
+        document.ontouchmove = null;
+      }
+    }
+
+    // Initialize Draggable PiP
+    var ghostPipEl = document.getElementById("decoyGhostPip");
+    var ghostPipHeaderEl = document.getElementById("ghostPipHeader");
+    if (ghostPipEl && ghostPipHeaderEl) {
+      makeDraggable(ghostPipEl, ghostPipHeaderEl);
+    }
+
+    // Keyboard shortcut: Ctrl + Shift + P toggles Ghost PiP
+    document.addEventListener("keydown", function(e) {
+      if (e.ctrlKey && e.shiftKey && (e.key === "p" || e.key === "P")) {
+        e.preventDefault();
+        toggleGhostPip();
+      }
+    });
+
+    // --- WEB AUDIO PROCEDURAL AMBIENT SOUND STUDIO ---
+    var ambientEngine = {
+      masterVol: 0.7,
+      analyser: null,
+      tracks: {
+        rain: { active: false, gainNode: null, vol: 0.6, sourceNode: null, filter: null },
+        ocean: { active: false, gainNode: null, vol: 0.5, sourceNode: null, lfo: null, lfoGain: null },
+        binaural: { active: false, gainNode: null, vol: 0.4, oscL: null, oscR: null, merger: null }
+      }
+    };
+
+    function initAmbientContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      if (!ambientEngine.analyser) {
+        ambientEngine.analyser = audioCtx.createAnalyser();
+        ambientEngine.analyser.fftSize = 64;
+        ambientEngine.analyser.connect(audioCtx.destination);
+        startVisualizerLoop();
+      }
+    }
+
+    function toggleAmbientSound(type) {
+      initAmbientContext();
+      var t = ambientEngine.tracks[type];
+      if (!t) return;
+
+      var btnMap = {
+        rain: "btnSoundRain",
+        ocean: "btnSoundOcean",
+        binaural: "btnSoundBinaural"
+      };
+      var btn = document.getElementById(btnMap[type]);
+
+      if (t.active) {
+        stopSoundTrack(type);
+        t.active = false;
+        if (btn) { btn.innerText = "▶ Play"; btn.className = "btn btn-sec"; }
+        showToast("Stopped " + type + " ambient sound");
+      } else {
+        startSoundTrack(type);
+        t.active = true;
+        if (btn) { btn.innerText = "■ Stop"; btn.className = "btn"; }
+        showToast("Playing " + type + " focus sound");
+      }
+    }
+
+    function startSoundTrack(type) {
+      var t = ambientEngine.tracks[type];
+      t.gainNode = audioCtx.createGain();
+      t.gainNode.gain.setValueAtTime(t.vol * ambientEngine.masterVol, audioCtx.currentTime);
+      t.gainNode.connect(ambientEngine.analyser);
+
+      if (type === "rain") {
+        // Synthesize rain using looped filtered white noise
+        var bufferSize = audioCtx.sampleRate * 2;
+        var noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        var output = noiseBuffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        var whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        var filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+
+        whiteNoise.connect(filter);
+        filter.connect(t.gainNode);
+        whiteNoise.start();
+
+        t.sourceNode = whiteNoise;
+        t.filter = filter;
+      } else if (type === "ocean") {
+        // Synthesize rolling ocean tides: lowpass noise modulated by a 0.12Hz LFO
+        var bufferSizeOcean = audioCtx.sampleRate * 3;
+        var oceanBuffer = audioCtx.createBuffer(1, bufferSizeOcean, audioCtx.sampleRate);
+        var oceanData = oceanBuffer.getChannelData(0);
+        for (var j = 0; j < bufferSizeOcean; j++) {
+          oceanData[j] = Math.random() * 2 - 1;
+        }
+        var oceanNoise = audioCtx.createBufferSource();
+        oceanNoise.buffer = oceanBuffer;
+        oceanNoise.loop = true;
+
+        var oceanFilter = audioCtx.createBiquadFilter();
+        oceanFilter.type = "lowpass";
+        oceanFilter.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+        var swellGain = audioCtx.createGain();
+        swellGain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+
+        // LFO for rhythmic tide swells
+        var lfo = audioCtx.createOscillator();
+        lfo.type = "sine";
+        lfo.frequency.setValueAtTime(0.12, audioCtx.currentTime);
+
+        var lfoGain = audioCtx.createGain();
+        lfoGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(swellGain.gain);
+
+        oceanNoise.connect(oceanFilter);
+        oceanFilter.connect(swellGain);
+        swellGain.connect(t.gainNode);
+
+        oceanNoise.start();
+        lfo.start();
+
+        t.sourceNode = oceanNoise;
+        t.lfo = lfo;
+        t.lfoGain = lfoGain;
+      } else if (type === "binaural") {
+        // 40Hz Gamma Focus: Left ear 200Hz, Right ear 240Hz (creates a 40Hz beat frequency)
+        var oscL = audioCtx.createOscillator();
+        var oscR = audioCtx.createOscillator();
+        oscL.type = "sine";
+        oscR.type = "sine";
+        oscL.frequency.setValueAtTime(200, audioCtx.currentTime);
+        oscR.frequency.setValueAtTime(240, audioCtx.currentTime);
+
+        var merger = audioCtx.createChannelMerger(2);
+        oscL.connect(merger, 0, 0); // Left channel
+        oscR.connect(merger, 0, 1); // Right channel
+        merger.connect(t.gainNode);
+
+        oscL.start();
+        oscR.start();
+
+        t.oscL = oscL;
+        t.oscR = oscR;
+        t.merger = merger;
+      }
+    }
+
+    function stopSoundTrack(type) {
+      var t = ambientEngine.tracks[type];
+      if (t.sourceNode) {
+        try { t.sourceNode.stop(); t.sourceNode.disconnect(); } catch(e) {}
+        t.sourceNode = null;
+      }
+      if (t.lfo) {
+        try { t.lfo.stop(); t.lfo.disconnect(); } catch(e) {}
+        t.lfo = null;
+      }
+      if (t.oscL) {
+        try { t.oscL.stop(); t.oscL.disconnect(); } catch(e) {}
+        t.oscL = null;
+      }
+      if (t.oscR) {
+        try { t.oscR.stop(); t.oscR.disconnect(); } catch(e) {}
+        t.oscR = null;
+      }
+      if (t.gainNode) {
+        try { t.gainNode.disconnect(); } catch(e) {}
+        t.gainNode = null;
+      }
+    }
+
+    function setSoundVol(type, val) {
+      var t = ambientEngine.tracks[type];
+      if (!t) return;
+      t.vol = val / 100;
+      if (t.active && t.gainNode && audioCtx) {
+        t.gainNode.gain.setValueAtTime(t.vol * ambientEngine.masterVol, audioCtx.currentTime);
+      }
+    }
+
+    function setAmbientMasterVol(val) {
+      ambientEngine.masterVol = val / 100;
+      ["rain", "ocean", "binaural"].forEach(function(type) {
+        var t = ambientEngine.tracks[type];
+        if (t.active && t.gainNode && audioCtx) {
+          t.gainNode.gain.setValueAtTime(t.vol * ambientEngine.masterVol, audioCtx.currentTime);
+        }
+      });
+    }
+
+    // Wave Visualizer Animation Canvas Loop
+    var visualizerActive = false;
+    function startVisualizerLoop() {
+      if (visualizerActive) return;
+      visualizerActive = true;
+      var canvas = document.getElementById("ambientWaveCanvas");
+      if (!canvas) return;
+      var ctx = canvas.getContext("2d");
+
+      function drawWave() {
+        requestAnimationFrame(drawWave);
+        if (!ambientEngine.analyser) return;
+
+        canvas.width = canvas.parentElement.clientWidth || 300;
+        canvas.height = canvas.parentElement.clientHeight || 44;
+        var w = canvas.width;
+        var h = canvas.height;
+
+        var bufferLength = ambientEngine.analyser.frequencyBinCount;
+        var dataArray = new Uint8Array(bufferLength);
+        ambientEngine.analyser.getByteTimeDomainData(dataArray);
+
+        ctx.fillStyle = "#030712";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#38bdf8";
+        ctx.beginPath();
+
+        var sliceWidth = w * 1.0 / bufferLength;
+        var x = 0;
+
+        for (var i = 0; i < bufferLength; i++) {
+          var v = dataArray[i] / 128.0;
+          var y = v * (h / 2);
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+          x += sliceWidth;
+        }
+
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+      }
+      requestAnimationFrame(drawWave);
     }
 
     // --- INITIALIZATION ---
