@@ -37,11 +37,13 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Real-Time Surveillance Telemetry Audit Log**: Tracks, logs, and displays every remote blur, visibility loss, or compositor jitter event with exact time of detection and defense action taken.
 
 3. **Multi-Theme Workspace Styling Engine**:
-   - Switch seamlessly between 4 distinct visual workspace themes via the header selector:
+   - Switch seamlessly between 6 distinct visual workspace themes via the header selector:
      - 🌙 **Midnight Dark** (Default)
      - ⚡ **Neon Cyan** (High-contrast blue/cyan cyberpunk palette)
      - 🌲 **Emerald Focus** (Muted deep green eye-comfort theme)
      - 📜 **Warm Academic** (Classic sepia-toned parchment paper aesthetic)
+     - 🌆 **Synthwave Sunset** (Vibrant 80s neon purple & pink retro aesthetic)
+     - ⬛ **Pure OLED Stealth** (True `#000000` absolute black for zero backlight bleed)
    - Preferences automatically persist to local storage.
 
 4. **Pomodoro Focus Study Timer**:
@@ -60,11 +62,17 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **🌧️ Gentle Rain**: Filtered white noise stream simulating raindrops.
    - **🌊 Ocean Tides**: Low-pass filtered noise modulated by a 0.12Hz Low-Frequency Oscillator (LFO) creating rhythmic rolling surf waves.
    - **🧠 40Hz Gamma Focus (Binaural Beats)**: Left ear (200Hz) and right ear (240Hz) tone synthesis generating a 40Hz gamma entrainment frequency for deep study concentration.
+   - **☕ Cafe Study Ambience**: Warm integrated brown noise passed through dynamic bandpass filters with slow dual-LFO drift simulating coffeehouse room tone.
+   - **Panic Mute Protection**: Instantly suspends Web Audio context when panic mode triggers so ambient sounds go completely silent during decoy inspection, resuming seamlessly when restored.
    - **Master & Track Volume**: Individual slider controls plus an animated real-time oscilloscope wave canvas.
 
 7. **In-App Study Notes & Citation Scratchpad**:
    - Built-in scratchpad for jotting lecture notes, timestamps, and bibliography citations.
-   - Auto-saves to `localStorage` and includes a one-click **"📄 Send to Google Doc"** button to append notes directly into the active essay.
+   - Auto-saves to `localStorage`.
+   - **💾 Export .MD**: One-click download as structured Markdown.
+   - **📄 Export .TXT**: One-click download as plain text.
+   - **📋 Copy Citation**: Automatically formats notes into academic BibTeX citations.
+   - **📄 Send to Google Doc**: Appends notes directly into the active Google Docs decoy essay.
 
 8. **Multi-Template School Decoys & Full Interactivity**:
    - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
@@ -111,6 +119,11 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
       2. Public Piped private mirror.
       3. Invidious secondary mirror.
       4. Yewtube tertiary mirror.
+    - **Direct MP4 Stream Extraction (`/api/stream?v=...`)**:
+      - Extracts direct CDN video stream URLs via `yt-dlp`.
+      - Playable directly in native HTML5 `<video controls autoplay>` player, bypassing iframe sandbox restrictions.
+    - **Real-Time Telemetry & Stats API (`/api/stats`)**:
+      - Returns uptime, total requests handled, active connections, and recent activity logs.
     - Complete CORS preflight (`OPTIONS`) support across all backend endpoints.
 
 ---

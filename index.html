@@ -55,6 +55,30 @@
       --code-bg: #0c0a09;
       --header-bg: rgba(41, 37, 36, 0.96);
     }
+    body[data-theme="synthwave"] {
+      --bg: #1a0b2e;
+      --card: #271047;
+      --card-border: #4c1d95;
+      --primary: #ec4899;
+      --primary-hover: #db2777;
+      --accent: #8b5cf6;
+      --text: #fdf2f8;
+      --text-muted: #c084fc;
+      --code-bg: #110720;
+      --header-bg: rgba(39, 16, 71, 0.96);
+    }
+    body[data-theme="oled"] {
+      --bg: #000000;
+      --card: #080808;
+      --card-border: #171717;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #22c55e;
+      --text: #f5f5f5;
+      --text-muted: #737373;
+      --code-bg: #000000;
+      --header-bg: rgba(0, 0, 0, 0.98);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
@@ -628,16 +652,29 @@
       position: fixed;
       bottom: 14px;
       right: 14px;
-      background: rgba(0,0,0,0.85);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      opacity: 0.25;
-      transition: opacity 0.2s;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #94a3b8;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.35;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
       z-index: 1000000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
     }
-    .panic-restore-hint:hover { opacity: 0.95; cursor: pointer; }
+    .panic-restore-hint:hover {
+      opacity: 0.95;
+      color: #fff;
+      border-color: #38bdf8;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+    }
 
     /* FOOTER */
     footer {
@@ -677,6 +714,8 @@
         <option value="cyberpunk">⚡ Neon Cyan</option>
         <option value="emerald">🌲 Emerald Focus</option>
         <option value="academic">📜 Warm Academic</option>
+        <option value="synthwave">🌆 Synthwave Sunset</option>
+        <option value="oled">⬛ Pure OLED Stealth</option>
       </select>
 
       <select class="cloak-select" id="tabCloakSelect" onchange="switchTabCloak(this.value)">
@@ -735,6 +774,7 @@
           <div class="engine-tabs">
             <button class="engine-tab active" id="eng-nocookie" onclick="switchEngine('nocookie')">⚡ NoCookie (Lightspeed Safe)</button>
             <button class="engine-tab" id="eng-yt" onclick="switchEngine('yt')">▶️ YouTube HD</button>
+            <button class="engine-tab" id="eng-direct" onclick="switchEngine('direct')">⚡ Local Daemon (Direct Stream)</button>
             <button class="engine-tab" id="eng-piped" onclick="switchEngine('piped')">🛡️ Piped</button>
             <button class="engine-tab" id="eng-inv" onclick="switchEngine('inv')">🌐 Invidious</button>
             <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
@@ -760,6 +800,7 @@
                   allowfullscreen 
                   referrerpolicy="strict-origin-when-cross-origin">
           </iframe>
+          <video id="mainNativeVideo" controls autoplay style="display:none; width:100%; height:100%; background:#000; border-radius:8px;"></video>
         </div>
         <div class="player-meta">
           <div class="player-title" id="activeVidTitle">Video Player Active</div>
@@ -910,7 +951,10 @@
       <textarea id="studyScratchpad" style="width: 100%; height: 110px; background: var(--code-bg); color: #fff; border: 1px solid #374151; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; resize: vertical; margin-bottom: 10px; box-sizing: border-box;" placeholder="Type timestamps, key lecture quotes, and bibliography citations here..." oninput="saveScratchpad()"></textarea>
       <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
         <span id="scratchpadStatus" style="font-size: 12px; color: var(--text-muted);">Auto-saved locally</span>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="exportScratchpad('md')" title="Download study notes as Markdown file">💾 Export .MD</button>
+          <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="exportScratchpad('txt')" title="Download study notes as plain text file">📄 Export .TXT</button>
+          <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="copyScratchpadCitation()" title="Copy as formatted academic citation">📋 Copy Citation</button>
           <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="copyScratchpadToDocs()">📄 Send to Google Doc</button>
           <button class="btn btn-sec" style="font-size: 12px; padding: 6px 12px;" onclick="clearScratchpad()">🗑️ Clear</button>
         </div>
@@ -959,6 +1003,16 @@
           </div>
           <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Binaural frequency wave for deep focus</div>
           <input type="range" id="volBinaural" min="0" max="100" value="40" oninput="setSoundVol('binaural', this.value)" style="width: 100%; height: 4px; accent-color: #f472b6;" />
+        </div>
+
+        <!-- Track 4: Cafe Study Ambience -->
+        <div style="background: #1f2937; border: 1px solid #374151; padding: 14px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #fbbf24;">☕ Cafe Ambience</span>
+            <button class="btn btn-sec" id="btnSoundCafe" style="padding: 3px 10px; font-size: 11px;" onclick="toggleAmbientSound('cafe')">▶ Play</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Warm acoustic room tone &amp; coffeehouse hum</div>
+          <input type="range" id="volCafe" min="0" max="100" value="55" oninput="setSoundVol('cafe', this.value)" style="width: 100%; height: 4px; accent-color: #fbbf24;" />
         </div>
       </div>
 
@@ -1309,8 +1363,9 @@
     </div>
 
     <!-- RESTORE HINT -->
-    <div class="panic-restore-hint" onclick="togglePanicMode()">
-      Press ESC or click here to resume
+    <div class="panic-restore-hint" onclick="togglePanicMode()" title="Return to Secret Workspace (or press ESC)">
+      <span>🔓</span>
+      <span><b>ESC</b> &bull; Resume Session</span>
     </div>
   </div>
 
@@ -1387,16 +1442,35 @@
     function togglePanicMode() {
       var overlay = document.getElementById("decoyOverlay");
       var frame = document.getElementById("mainPlayerFrame");
+      var nativeVid = document.getElementById("mainNativeVideo");
 
       if (overlay.style.display === "flex") {
         overlay.style.display = "none";
         document.body.style.overflow = "auto";
+        // Restore ambient sound if it was suspended for panic
+        if (ambientEngine && ambientEngine.suspendedForPanic && audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+          ambientEngine.suspendedForPanic = false;
+        }
+        if (nativeVid && nativeVid.dataset.pausedByPanic === "true") {
+          nativeVid.play();
+          nativeVid.dataset.pausedByPanic = "false";
+        }
       } else {
         // MUTE AUDIO INSTANTLY ON PANIC
         if (frame && frame.src) {
           // Temporarily mute/pause by posting postMessage or reloading muted
           frame.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
           frame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        }
+        if (nativeVid && !nativeVid.paused) {
+          nativeVid.pause();
+          nativeVid.dataset.pausedByPanic = "true";
+        }
+        // Suspend Web Audio context immediately so ambient noises or synthesizers go dead silent
+        if (audioCtx && audioCtx.state === 'running') {
+          audioCtx.suspend();
+          ambientEngine.suspendedForPanic = true;
         }
         overlay.style.display = "flex";
         document.body.style.overflow = "hidden";
@@ -1671,6 +1745,41 @@
         updateWordCount();
         showToast("Appended notes into Google Doc!");
       }
+    }
+
+    function exportScratchpad(format) {
+      var text = document.getElementById("studyScratchpad").value;
+      if (!text.trim()) { showToast("Scratchpad is empty!"); return; }
+      var mime = format === 'md' ? 'text/markdown' : 'text/plain';
+      var filename = "study_notes_" + (new Date().toISOString().slice(0, 10)) + "." + format;
+      var blob = new Blob([text], { type: mime + ";charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded " + filename);
+    }
+
+    function copyScratchpadCitation() {
+      var text = document.getElementById("studyScratchpad").value.trim();
+      if (!text) { showToast("Scratchpad is empty!"); return; }
+      var today = new Date().toISOString().slice(0, 10);
+      var citation = "@misc{LectureNotes" + today.replace(/-/g, "") + ",\n" +
+        "  author = {Course Lecturer / Researcher},\n" +
+        "  title = {Primary Source Lecture Notes & Annotations},\n" +
+        "  howpublished = {Scholarly Research Archive},\n" +
+        "  year = {" + new Date().getFullYear() + "},\n" +
+        "  note = {" + text.replace(/[\n\r]+/g, " ") + "}\n" +
+        "}";
+      navigator.clipboard.writeText(citation).then(function() {
+        showToast("Copied BibTeX citation to clipboard!");
+      }).catch(function() {
+        showToast("Citation generated: Check clipboard permissions");
+      });
     }
 
     function clearScratchpad() {
@@ -1988,6 +2097,10 @@
       if (frame && frame.contentWindow) {
         frame.contentWindow.postMessage('{"event":"command","func":"setPlaybackRate","args":[' + speed + ']}', '*');
       }
+      var nativeVid = document.getElementById("mainNativeVideo");
+      if (nativeVid) {
+        nativeVid.playbackRate = parseFloat(speed);
+      }
       showToast("Playback speed: " + speed + "x");
     }
 
@@ -2147,12 +2260,45 @@
     function switchEngine(engine) {
       activeEngine = engine;
       var frame = document.getElementById("mainPlayerFrame");
-      var base = mirrors[engine] || mirrors["nocookie"];
-      frame.src = base + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
+      var nativeVid = document.getElementById("mainNativeVideo");
 
       document.querySelectorAll(".engine-tab").forEach(function(b) { b.classList.remove("active"); });
       var btn = document.getElementById("eng-" + engine);
       if (btn) btn.classList.add("active");
+
+      if (engine === "direct") {
+        showToast("Querying local daemon stream extractor...");
+        fetch("http://127.0.0.1:8080/api/stream?v=" + encodeURIComponent(currentVideoId), { mode: 'cors' })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data && data.stream_url) {
+              frame.style.display = "none";
+              frame.src = "";
+              nativeVid.style.display = "block";
+              nativeVid.src = data.stream_url;
+              nativeVid.play();
+              showToast("Playing direct MP4 stream via Local Daemon!");
+            } else {
+              throw new Error("No stream found");
+            }
+          })
+          .catch(function(err) {
+            showToast("Local daemon not reachable - falling back to NoCookie");
+            switchEngine("nocookie");
+          });
+        return;
+      }
+
+      if (nativeVid) {
+        nativeVid.pause();
+        nativeVid.style.display = "none";
+        nativeVid.src = "";
+      }
+      if (frame) {
+        frame.style.display = "block";
+        var base = mirrors[engine] || mirrors["nocookie"];
+        frame.src = base + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
+      }
       showToast("Engine: " + engine.toUpperCase());
     }
 
@@ -2162,7 +2308,13 @@
 
     function closePlayer() {
       var frame = document.getElementById("mainPlayerFrame");
-      frame.src = "";
+      if (frame) frame.src = "";
+      var nativeVid = document.getElementById("mainNativeVideo");
+      if (nativeVid) {
+        nativeVid.pause();
+        nativeVid.src = "";
+        nativeVid.style.display = "none";
+      }
       document.getElementById("playerContainer").style.display = "none";
     }
 
@@ -2441,10 +2593,12 @@
     var ambientEngine = {
       masterVol: 0.7,
       analyser: null,
+      suspendedForPanic: false,
       tracks: {
         rain: { active: false, gainNode: null, vol: 0.6, sourceNode: null, filter: null },
         ocean: { active: false, gainNode: null, vol: 0.5, sourceNode: null, lfo: null, lfoGain: null },
-        binaural: { active: false, gainNode: null, vol: 0.4, oscL: null, oscR: null, merger: null }
+        binaural: { active: false, gainNode: null, vol: 0.4, oscL: null, oscR: null, merger: null },
+        cafe: { active: false, gainNode: null, vol: 0.55, sourceNode: null, filter: null, lfo: null, lfoGain: null }
       }
     };
 
@@ -2471,7 +2625,8 @@
       var btnMap = {
         rain: "btnSoundRain",
         ocean: "btnSoundOcean",
-        binaural: "btnSoundBinaural"
+        binaural: "btnSoundBinaural",
+        cafe: "btnSoundCafe"
       };
       var btn = document.getElementById(btnMap[type]);
 
@@ -2576,6 +2731,46 @@
         t.oscL = oscL;
         t.oscR = oscR;
         t.merger = merger;
+      } else if (type === "cafe") {
+        // Cafe Ambience: Warm brown noise modulated through dual bandpass filters with gentle LFO drift
+        var bufferSizeCafe = audioCtx.sampleRate * 3;
+        var cafeBuffer = audioCtx.createBuffer(1, bufferSizeCafe, audioCtx.sampleRate);
+        var cafeData = cafeBuffer.getChannelData(0);
+        var lastOut = 0.0;
+        for (var k = 0; k < bufferSizeCafe; k++) {
+          var white = Math.random() * 2 - 1;
+          lastOut = (lastOut + (0.02 * white)) / 1.02;
+          cafeData[k] = lastOut * 3.5;
+        }
+        var cafeNoise = audioCtx.createBufferSource();
+        cafeNoise.buffer = cafeBuffer;
+        cafeNoise.loop = true;
+
+        var cafeFilter = audioCtx.createBiquadFilter();
+        cafeFilter.type = "bandpass";
+        cafeFilter.frequency.setValueAtTime(480, audioCtx.currentTime);
+        cafeFilter.Q.setValueAtTime(1.2, audioCtx.currentTime);
+
+        var cafeLfo = audioCtx.createOscillator();
+        cafeLfo.type = "triangle";
+        cafeLfo.frequency.setValueAtTime(0.18, audioCtx.currentTime);
+
+        var cafeLfoGain = audioCtx.createGain();
+        cafeLfoGain.gain.setValueAtTime(120, audioCtx.currentTime);
+
+        cafeLfo.connect(cafeLfoGain);
+        cafeLfoGain.connect(cafeFilter.frequency);
+
+        cafeNoise.connect(cafeFilter);
+        cafeFilter.connect(t.gainNode);
+
+        cafeNoise.start();
+        cafeLfo.start();
+
+        t.sourceNode = cafeNoise;
+        t.filter = cafeFilter;
+        t.lfo = cafeLfo;
+        t.lfoGain = cafeLfoGain;
       }
     }
 
@@ -2585,9 +2780,17 @@
         try { t.sourceNode.stop(); t.sourceNode.disconnect(); } catch(e) {}
         t.sourceNode = null;
       }
+      if (t.filter) {
+        try { t.filter.disconnect(); } catch(e) {}
+        t.filter = null;
+      }
       if (t.lfo) {
         try { t.lfo.stop(); t.lfo.disconnect(); } catch(e) {}
         t.lfo = null;
+      }
+      if (t.lfoGain) {
+        try { t.lfoGain.disconnect(); } catch(e) {}
+        t.lfoGain = null;
       }
       if (t.oscL) {
         try { t.oscL.stop(); t.oscL.disconnect(); } catch(e) {}
@@ -2614,7 +2817,7 @@
 
     function setAmbientMasterVol(val) {
       ambientEngine.masterVol = val / 100;
-      ["rain", "ocean", "binaural"].forEach(function(type) {
+      ["rain", "ocean", "binaural", "cafe"].forEach(function(type) {
         var t = ambientEngine.tracks[type];
         if (t.active && t.gainNode && audioCtx) {
           t.gainNode.gain.setValueAtTime(t.vol * ambientEngine.masterVol, audioCtx.currentTime);

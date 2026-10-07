@@ -268,6 +268,37 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(res)
             return
+        elif path == "/api/stats":
+            with STATS_LOCK:
+                stats_copy = dict(STATS)
+            with LOGS_LOCK:
+                recent_logs = list(ACTIVITY_LOGS[-20:])
+            stats_copy["uptime"] = round(time.time() - stats_copy["start_time"], 1)
+            stats_copy["recent_activity"] = recent_logs
+            res = json.dumps(stats_copy).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Length", str(len(res)))
+            self.end_headers()
+            self.wfile.write(res)
+            return
+        elif path == "/api/stream":
+            vid = urllib.parse.parse_qs(parsed.query).get("v", [""])[0]
+            if vid:
+                stream_url = get_yt_stream(vid)
+                info = get_yt_info(vid)
+                res = json.dumps({"id": vid, "stream_url": stream_url, "info": info}).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(res)))
+                self.end_headers()
+                self.wfile.write(res)
+                return
+            else:
+                self.send_error(400, "Missing 'v' parameter")
+                return
         elif path in ("/youtube", "/yt"):
             query = urllib.parse.parse_qs(parsed.query)
             vid = query.get("v", [None])[0]
