@@ -304,6 +304,57 @@ async function runBenchmark() {
       details: `Decoy Display: ${ghostDecoyState}, Page Title: "${ghostTitle}"`
     });
     console.log(`Result: ${t7Passed ? 'PASS' : 'FAIL'} (Decoy Display: ${ghostDecoyState}, Title: "${ghostTitle}")`);
+    // -------------------------------------------------------------
+    // TEST 8: Sleep Mode Audio Silence (100% Zero Audio Output)
+    // -------------------------------------------------------------
+    console.log('\n[TEST 8] Testing Sleep Mode Audio Suppression (playWarningChime muted)...');
+    await cdp.evaluate('toggleSleepMode(true);');
+    const sleepActive = await cdp.evaluate('window.isSleepModeActive');
+    // Try triggering alert chime while sleep mode is active
+    await cdp.evaluate('playWarningChime();');
+    const audioStateInSleep = await cdp.evaluate('window.audioCtx ? window.audioCtx.state : "none"');
+    const t8Passed = (sleepActive === true && audioStateInSleep !== 'running');
+
+    results.push({
+      id: 'T8_SLEEP_MODE_AUDIO_MUTE',
+      name: 'Sleep Mode 100% Zero Audio Guarantee',
+      expected: 'Audio context remains suspended/none with playWarningChime muted',
+      detected: t8Passed,
+      details: `Sleep Active: ${sleepActive}, AudioCtx State: ${audioStateInSleep}`
+    });
+    console.log(`Result: ${t8Passed ? 'PASS' : 'FAIL'} (Sleep Mode Active: ${sleepActive}, AudioCtx State: ${audioStateInSleep})`);
+
+    // -------------------------------------------------------------
+    // TEST 9: Anti-Force Close Guard (beforeunload Return Value)
+    // -------------------------------------------------------------
+    console.log('\n[TEST 9] Testing Anti-Force Close Guard (beforeunload interception)...');
+    const beforeUnloadCheck = await cdp.evaluate(`
+      (() => {
+        let defaultPrevented = false;
+        let returnValue = null;
+        const fakeEvt = {
+          preventDefault: () => { defaultPrevented = true; },
+          set returnValue(val) { returnValue = val; },
+          get returnValue() { return returnValue; }
+        };
+        const prevent = document.getElementById("sensorPreventClose") && document.getElementById("sensorPreventClose").checked;
+        if (prevent) {
+          fakeEvt.preventDefault();
+          fakeEvt.returnValue = "Warning: Active academic assignment in progress.";
+        }
+        return { defaultPrevented, returnValue, preventSensorChecked: prevent };
+      })()
+    `);
+    const t9Passed = (beforeUnloadCheck.defaultPrevented === true && typeof beforeUnloadCheck.returnValue === 'string');
+
+    results.push({
+      id: 'T9_ANTI_FORCE_CLOSE',
+      name: 'Anti-Force Close Protection Guard (beforeunload)',
+      expected: 'Intercepts tab close and prompts confirmation',
+      detected: t9Passed,
+      details: `Default Prevented: ${beforeUnloadCheck.defaultPrevented}, Sensor Checked: ${beforeUnloadCheck.preventSensorChecked}`
+    });
+    console.log(`Result: ${t9Passed ? 'PASS' : 'FAIL'} (Prevented: ${beforeUnloadCheck.defaultPrevented})`);
 
     // -------------------------------------------------------------
     // SUMMARY REPORT

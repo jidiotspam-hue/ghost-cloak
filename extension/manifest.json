@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Docs Workspace & Academic Sync Assistant",
+  "short_name": "DocsAssistant",
+  "version": "2.4.0",
+  "description": "Enhances Google Docs and Classroom productivity with citation tools, formula scratchpads, and cloud workspace syncing.",
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_telemetry_neutralizer",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Docs Workspace Assistant"
+  }
+}

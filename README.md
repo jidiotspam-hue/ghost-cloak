@@ -56,7 +56,15 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
      - 🐍 **Cellular Respiration Snake**: Interactive cell biology themed snake game where the organelle matrix consumes mitochondrial ATP nutrients (`38bdf8`) on an HTML5 canvas.
    - **Dual-Surface Execution**: Playable both in the main workspace and inside a dedicated **Computational Thinking / Bioenergetics Logic Lab** decoy template screen.
 
-5. **Multi-Theme Workspace Styling Engine**:
+5. **Sleep / Silent Mode (100% Zero Audio Output Guaranteed)**:
+   - Built specifically for night-time sessions and uninterrupted rest:
+     - Guarantees **zero acoustic emission** across all browser subsystems.
+     - Immediately suspends the `AudioContext` driver and sets `<video>` / `<iframe>` players to hardware mute.
+     - Silences surveillance radar warning chimes, Pomodoro study interval alerts, and procedural ambient audio tracks.
+     - Easily toggled via the top header button (**`🌙 Sleep Mode: ON (Muted)`**) or through the Security Settings modal.
+     - Persists automatically to local storage (`localStorage.cb_sensor_sleep_mode`).
+
+6. **Multi-Theme Workspace Styling Engine**:
    - Switch seamlessly between 6 distinct visual workspace themes via the header selector:
      - 🌙 **Midnight Dark** (Default)
      - ⚡ **Neon Cyan** (High-contrast blue/cyan cyberpunk palette)
@@ -66,27 +74,27 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
      - ⬛ **Pure OLED Stealth** (True `#000000` absolute black for zero backlight bleed)
    - Preferences automatically persist to local storage.
 
-6. **Pomodoro Focus Study Timer**:
+7. **Pomodoro Focus Study Timer**:
    - Integrated study cycle clock (25-minute Deep Focus + 5-minute Rest interval).
    - Embedded both in the top header and inside the Google Docs decoy toolbar (`⏱️ 25:00`).
-   - Plays a gentle acoustic alert blip when switching between focus and rest periods.
+   - Plays a gentle acoustic alert blip when switching between focus and rest periods (automatically muted when Sleep Mode is on).
 
-7. **In-Decoy Draggable "Ghost PiP" Floating Player**:
+8. **In-Decoy Draggable "Ghost PiP" Floating Player**:
    - Floating video player that operates **directly inside the Google Docs decoy screen**.
    - **Draggable & Resizable**: Drag from the header bar across the document on Chromebook touchscreen or mouse.
    - **Stealth Opacity Slider**: Adjust transparency from 20% to 100% so text on the document shows through.
    - **Quick Toggle**: Dedicated toolbar button or hotkey `Ctrl + Shift + P`.
 
-8. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
+9. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
    - 100% offline procedural ambient audio generator built with the Web Audio API — zero network downloads or external audio files.
    - **🌧️ Gentle Rain**: Filtered white noise stream simulating raindrops.
    - **🌊 Ocean Tides**: Low-pass filtered noise modulated by a 0.12Hz Low-Frequency Oscillator (LFO) creating rhythmic rolling surf waves.
    - **🧠 40Hz Gamma Focus (Binaural Beats)**: Left ear (200Hz) and right ear (240Hz) tone synthesis generating a 40Hz gamma entrainment frequency for deep study concentration.
    - **☕ Cafe Study Ambience**: Warm integrated brown noise passed through dynamic bandpass filters with slow dual-LFO drift simulating coffeehouse room tone.
-   - **Panic Mute Protection**: Instantly suspends Web Audio context when panic mode triggers so ambient sounds go completely silent during decoy inspection, resuming seamlessly when restored.
+   - **Panic & Sleep Mute Protection**: Instantly suspends Web Audio context when panic mode triggers or when Sleep Mode is active.
    - **Master & Track Volume**: Individual slider controls plus an animated real-time oscilloscope wave canvas.
 
-9. **In-App Study Notes & Citation Scratchpad**:
+10. **In-App Study Notes & Citation Scratchpad**:
    - Built-in scratchpad for jotting lecture notes, timestamps, and bibliography citations.
    - Auto-saves to `localStorage`.
    - **💾 Export .MD**: One-click download as structured Markdown.
@@ -94,7 +102,7 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **📋 Copy Citation**: Automatically formats notes into academic BibTeX citations.
    - **📄 Send to Google Doc**: Appends notes directly into the active Google Docs decoy essay.
 
-10. **Multi-Template School Decoys & Full Interactivity**:
+11. **Multi-Template School Decoys & Full Interactivity**:
     - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
       - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
       - 🏛️ *AP US History: Progressive Era & Labor Reform*
@@ -106,17 +114,17 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
     - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
     - 📖 **Authentic Wikipedia Decoy**: Encyclopedic layout complete with article search, infobox, table of contents, and scholarly references.
 
-11. **Academic Media Player Controls**:
+12. **Academic Media Player Controls**:
     - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
     - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
     - **Theater Mode**: One-click distraction-free cinema player.
 
-12. **Client-Side Web Gateway & Sandbox Hub**:
+13. **Client-Side Web Gateway & Sandbox Hub**:
     - Embedded inline iframe browser sandbox with popout and close controls.
     - Quick pre-configured shortcuts for Hacker News, Wikipedia, Lichess, and IP Info.
     - Full `about:blank` history-cloaked popout mode.
 
-13. **Security, Sensors & Cloaking**:
+14. **Security, Sensors & Cloaking**:
     - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
     - **Hardened Anti-Force Close Guard (`beforeunload` + User Gesture Arming)**: Intercepts accidental tab closure and extension remote tab-close signals with an authentic academic confirmation modal (`"Warning: Active academic assignment in progress. Closing this tab will lose unsaved research data."`).
     - **Session Resurrection Engine**: Continuously snapshots active video ID, playback position, scratchpad notes, and active decoy to local storage every 3 seconds. If a tab is forcibly closed, a one-click **"⚡ Session Restored"** banner appears upon next load to immediately resume playback.
@@ -124,24 +132,26 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
     - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
     - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"`, the Canvas `"C"` logo, or the Wikipedia `"📖"` icon quietly unlocks the hub without touching the keyboard.
 
-14. **`about:blank` Cloaking**:
+15. **`about:blank` Cloaking**:
     - Spawns the entire unblocker inside an `about:blank` window.
     - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
     - Leaves **zero history** in `chrome://history`.
 
-15. **Lightspeed Systems Stealth Optimizations**:
+16. **Lightspeed Systems Stealth Optimizations**:
     - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
     - **Outgoing Request Camouflage (Proxy & Backend)**: Local proxy and API requests are cloaked with academic Referer headers (`https://docs.google.com/document/u/0/...`) and Origin (`https://docs.google.com`), disguising outbound traffic from network packet inspectors and district logs.
     - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
     - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
     - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
 
-16. **Multi-Tier Rotating School Wi-Fi Mirrors & Backend Synergy**:
+17. **Multi-Tier Rotating School Wi-Fi Mirrors & Serverless Egress Relays**:
     - Multi-tier search fallback pipeline:
       1. Local backend API search (`127.0.0.1:8080/api/search`) via Python `yt-dlp` engine.
-      2. Public Piped private mirror.
-      3. Invidious secondary mirror.
-      4. Yewtube tertiary mirror.
+      2. **⚡ AWS Lambda Serverless Free Tier (`lambda_function.py`)**: Zero cost (1,000,000 requests/month free forever). Functions as an off-network egress relay that bypasses school perimeter DPI firewalls with zero infrastructure bills.
+      3. **☁️ Cloudflare Worker Relay (`worker.js`)**: Edge network forward proxy and DoH resolver.
+      4. Public Piped private mirror.
+      5. Invidious secondary mirror.
+      6. Yewtube tertiary mirror.
     - **Direct MP4 Stream Extraction (`/api/stream?v=...`)**:
       - Extracts direct CDN video stream URLs via `yt-dlp`.
       - Playable directly in native HTML5 `<video controls autoplay>` player, bypassing iframe sandbox restrictions.
@@ -210,3 +220,52 @@ open http://127.0.0.1:8080/
 # Stop local proxy server
 ./stop_proxy.sh
 ```
+
+---
+
+## ⚡ AWS Lambda Serverless Free Tier Egress Relay (Zero Cost / No Bills)
+
+Deploy GhostCloak's serverless egress relay on **AWS Lambda** completely free of charge under AWS's permanent Free Tier:
+- **Free Tier Allowance**: **1,000,000 requests/month** and **3.2 million seconds of compute time** free forever.
+- **Zero Running Idle Cost**: Unlike EC2 or lightsail instances, Lambda charges $0.00 when idle. Zero surprise bills.
+
+### 📋 2-Minute Deployment Steps:
+
+1. Log into your free [AWS Management Console](https://console.aws.amazon.com/).
+2. Navigate to **AWS Lambda** &rarr; **Create function**:
+   - Function name: `docs-academic-relay`
+   - Runtime: `Python 3.12` (or 3.11)
+   - Architecture: `x86_64` or `arm64`
+   - Click **Create function**.
+3. In the Code Source tab, paste the code from [`lambda_function.py`](file:///Users/alexisgrimmace/Documents/gemislop/lambda_function.py) into `lambda_function.py`.
+4. Click **Deploy**.
+5. Enable the Function URL:
+   - Go to **Configuration** &rarr; **Function URL** &rarr; Click **Create Function URL**.
+   - Auth type: **NONE**.
+   - Expand **Configure cross-origin resource sharing (CORS)**:
+     - Check **Configure CORS**.
+     - Allow origin: `*`
+     - Allow methods: `GET`, `POST`, `OPTIONS`, `HEAD`.
+     - Allow headers: `*`.
+   - Click **Save**.
+6. Copy your generated Function URL (e.g. `https://xxxxxx.lambda-url.us-east-1.on.aws`).
+7. In GhostCloak:
+   - Click the **⚡ AWS Lambda (Free)** tab in the video player or enter the URL when prompted.
+   - All media requests will now route securely through Amazon's backbone network, bypassing local district firewalls and DNS poisons.
+
+---
+
+## 🧩 Chrome Extension: Docs Workspace & Academic Sync Assistant
+
+For environments where installing unpacked extensions is permitted or for testing locally, the suite includes a Manifest V3 extension located in [`extension/`](file:///Users/alexisgrimmace/Documents/gemislop/extension/):
+
+### Key Defense Features:
+1. **Visibility API Neutralizer**: Permanently spoofs `document.hidden = false` and `document.visibilityState = 'visible'` so surveillance extensions cannot tell when you switch tabs.
+2. **Focus Spoofing**: Locks `document.hasFocus() = true` and swallows non-trusted `blur` events.
+3. **Anti-Force Close Shield**: Emits a priority `beforeunload` dialog that prevents proctors from silently killing your active tab.
+4. **Declarative Network Blocker (`rules.json`)**: Drops telemetry packets bound for Lightspeed, GoGuardian, and Securly servers.
+
+### Installation:
+1. Open Chrome and go to `chrome://extensions/`.
+2. Toggle **Developer mode** on (top right).
+3. Click **Load unpacked** and select the [`extension/`](file:///Users/alexisgrimmace/Documents/gemislop/extension/) directory.

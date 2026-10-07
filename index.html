@@ -754,6 +754,10 @@
         🚀 About:Blank Cloak
       </button>
 
+      <button class="btn btn-sec" id="btnSleepMode" onclick="toggleSleepMode()" title="Sleep Mode: 100% zero audio emission (suppresses all chimes, study ambients, and timers)" style="border-color:#6366f1; color:#a5b4fc;">
+        🌙 Sleep Mode: OFF
+      </button>
+
       <button class="btn-panic" onclick="togglePanicMode()" title="Hotkey: Press ESC or ` anytime">
         🚨 Panic Cover (ESC)
       </button>
@@ -811,6 +815,7 @@
             <button class="engine-tab" id="eng-yt" onclick="switchEngine('yt')">▶️ YouTube HD</button>
             <button class="engine-tab" id="eng-direct" onclick="switchEngine('direct')">⚡ Local Daemon (Direct Stream)</button>
             <button class="engine-tab" id="eng-relay" onclick="switchEngine('relay')">☁️ Cloudflare Relay</button>
+            <button class="engine-tab" id="eng-aws" onclick="switchEngine('aws')" style="border-color:#f59e0b; color:#fbbf24;">⚡ AWS Lambda (Free)</button>
             <button class="engine-tab" id="eng-piped" onclick="switchEngine('piped')">🛡️ Piped</button>
             <button class="engine-tab" id="eng-inv" onclick="switchEngine('inv')">🌐 Invidious</button>
             <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
@@ -1001,6 +1006,14 @@
           <div>
             <div class="sensor-text">🎭 Self-Masking (Dynamic Title &amp; Favicon Shift)</div>
             <div class="sensor-sub">Periodically rotates title between academic courses (AP Bio, Calculus, History) to prevent pattern profiling</div>
+          </div>
+        </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorSleepMode" onchange="toggleSleepMode(this.checked)" />
+          <div>
+            <div class="sensor-text">🌙 Sleep / Silent Mode (100% Zero Audio)</div>
+            <div class="sensor-sub">Guarantees zero acoustic emission while sleeping — silences alerts, timers, and background audio</div>
           </div>
         </div>
       </div>
@@ -1721,7 +1734,10 @@
     };
 
     var audioCtx = null;
+    var isSleepModeActive = false;
+
     function playWarningChime() {
+      if (isSleepModeActive) return; // Mute all audio emissions when sleep mode is on
       try {
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2130,8 +2146,60 @@
         localStorage.setItem("cb_sensor_self_mask", maskChecked);
         toggleSelfMasking(maskChecked);
       }
+      if (document.getElementById("sensorSleepMode")) {
+        localStorage.setItem("cb_sensor_sleep_mode", document.getElementById("sensorSleepMode").checked);
+      }
       if (document.getElementById("panicHotkeySelect")) localStorage.setItem("cb_panic_hotkey", document.getElementById("panicHotkeySelect").value);
       showToast("Security & sensor settings saved");
+    }
+
+    function toggleSleepMode(forcedState) {
+      if (typeof forcedState === "boolean") {
+        isSleepModeActive = forcedState;
+      } else {
+        isSleepModeActive = !isSleepModeActive;
+      }
+
+      // Sync checkbox
+      var chk = document.getElementById("sensorSleepMode");
+      if (chk) chk.checked = isSleepModeActive;
+
+      // Sync header button
+      var btn = document.getElementById("btnSleepMode");
+      if (btn) {
+        if (isSleepModeActive) {
+          btn.innerHTML = "🌙 Sleep Mode: ON (Muted)";
+          btn.style.borderColor = "#10b981";
+          btn.style.color = "#34d399";
+          btn.style.background = "rgba(16, 185, 129, 0.15)";
+        } else {
+          btn.innerHTML = "🌙 Sleep Mode: OFF";
+          btn.style.borderColor = "#6366f1";
+          btn.style.color = "#a5b4fc";
+          btn.style.background = "transparent";
+        }
+      }
+
+      // Mute / stop any playing audio immediately
+      if (isSleepModeActive) {
+        if (audioCtx && audioCtx.state === 'running') {
+          audioCtx.suspend();
+        }
+        // Suspend native video or frame audio
+        var nativeVid = document.getElementById("mainNativeVideo");
+        if (nativeVid) nativeVid.muted = true;
+        var frame = document.getElementById("mainPlayerFrame");
+        if (frame && frame.contentWindow) {
+          try { frame.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); } catch(e) {}
+        }
+        showToast("🌙 Sleep Mode Active: 100% zero audio output");
+      } else {
+        var nativeVid = document.getElementById("mainNativeVideo");
+        if (nativeVid) nativeVid.muted = false;
+        showToast("🔔 Sleep Mode Disabled: Audio restored");
+      }
+
+      localStorage.setItem("cb_sensor_sleep_mode", isSleepModeActive);
     }
 
     // --- SELF-MASKING ROTATION ENGINE ---
@@ -2928,6 +2996,30 @@
         }
       }
 
+      if (engine === "aws") {
+        var awsUrl = localStorage.getItem("gc_aws_lambda_url") || "";
+        if (!awsUrl) {
+          awsUrl = prompt("Enter your AWS Lambda Function URL (e.g. https://xxxx.lambda-url.us-east-1.on.aws):", "");
+          if (awsUrl) {
+            awsUrl = awsUrl.trim().replace(/\/+$/, "");
+            localStorage.setItem("gc_aws_lambda_url", awsUrl);
+          }
+        }
+        if (awsUrl) {
+          showToast("Routing via AWS Lambda Free Tier (Zero Cost)...");
+          if (nativeVid) { nativeVid.pause(); nativeVid.style.display = "none"; nativeVid.src = ""; }
+          if (frame) {
+            frame.style.display = "block";
+            frame.src = awsUrl + "/fetch?url=" + encodeURIComponent("https://www.youtube-nocookie.com/embed/" + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0");
+          }
+          return;
+        } else {
+          showToast("No AWS Lambda URL provided, defaulting to NoCookie");
+          switchEngine("nocookie");
+          return;
+        }
+      }
+
       if (nativeVid) {
         nativeVid.pause();
         nativeVid.style.display = "none";
@@ -3329,6 +3421,10 @@
     };
 
     function initAmbientContext() {
+      if (isSleepModeActive) {
+        showToast("🌙 Sleep Mode is active (all audio muted). Disable Sleep Mode to play ambient sounds.");
+        return;
+      }
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
@@ -3646,8 +3742,12 @@
         if (document.getElementById("radarSensitivitySelect")) document.getElementById("radarSensitivitySelect").value = sens;
         radarSensitivity = sens;
       }
-      if (localStorage.getItem("cb_panic_hotkey") !== null) {
+      if (localStorage.getItem("cb_panic_hotkey") !== null && document.getElementById("panicHotkeySelect")) {
         document.getElementById("panicHotkeySelect").value = localStorage.getItem("cb_panic_hotkey");
+      }
+      if (localStorage.getItem("cb_sensor_sleep_mode") !== null) {
+        var sleepStored = localStorage.getItem("cb_sensor_sleep_mode") === "true";
+        toggleSleepMode(sleepStored);
       }
       var savedNotes = localStorage.getItem("gc_scratchpad_notes");
       if (savedNotes && document.getElementById("studyScratchpad")) {
