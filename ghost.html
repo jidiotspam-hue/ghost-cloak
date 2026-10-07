@@ -2986,16 +2986,14 @@
     searchOrPlay();
     setDecoyTemplate("docs");
 
-    // Check for Ghost Boot Mode (#ghost or ?mode=ghost)
-    if (window.location.hash === "#ghost" || window.location.search.indexOf("mode=ghost") !== -1) {
-      setTimeout(function() {
-        var overlay = document.getElementById("decoyOverlay");
-        if (overlay && overlay.style.display !== "flex") {
-          togglePanicMode();
-          showToast("👻 Booted in Ghost Cloak Mode (Teacher sees Google Docs)");
-        }
-      }, 50);
-    }
+    // Unconditional Ghost Boot Mode for ghost.html
+    setTimeout(function() {
+      var overlay = document.getElementById("decoyOverlay");
+      if (overlay && overlay.style.display !== "flex") {
+        togglePanicMode();
+        showToast("👻 Booted in Ghost Cloak Mode (Teacher sees Google Docs)");
+      }
+    }, 20);
   </script>
 </body>
 </html>

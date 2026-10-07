@@ -128,6 +128,20 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
 
 ---
 
+## 🛡️ Full Threat Model: Every Way Lightspeed Sees Your Screen & The Patches
+
+| # | Lightspeed Surveillance Vector | How Lightspeed Works | GhostCloak Patch & Neutralization |
+| :--- | :--- | :--- | :--- |
+| **1** | **Live Thumbnail Grid** (`chrome.tabs.captureVisibleTab`) | Extension captures 10-second periodic screenshots of the active browser viewport for teacher dashboard tiles. | **Dedicated Ghost Tab Boot (`#ghost` / `ghost.html`)**: Boots directly into Google Docs Decoy on frame 1. The thumbnail always captures authentic AP Biology coursework, real toolbars, word counts, and academic citations. |
+| **2** | **Open Tabs Inspection** (`chrome.tabs.query`) | Teacher clicks a student's card to list all open tabs (titles, URLs, favicons). Flagged domains or "YouTube" titles trigger automatic off-task alerts. | **Single-Tab Architecture + Tab Masking**: Entire suite runs within a single tab. `<title>` is dynamically cloaked to `Document - Google Docs` with authentic Google Docs favicon. Zero secondary tabs exist for the extension to list. |
+| **3** | **Browsing History & URL Logs** (`chrome.webNavigation`) | Logs visited domains and search query URLs to district servers. | **`about:blank` Execution**: Launches into an `about:blank` window. Lightspeed cannot block or log `about:blank` because it has no domain and writes zero history to `chrome://history`. |
+| **4** | **Full-Screen Live Stream** (`chrome.desktopCapture` / WebRTC) | Teacher clicks to watch 30fps real-time screen stream when suspicious. | **Ghost Peek (`Shift + ~` / `👁️ Ghost Peek`)**: Lets the student view their media underneath at adjustable opacity while the solid Google Doc remains dominant. The millisecond the window blurs or proctor acts, it snaps to 100% solid opacity instantly. |
+| **5** | **Audio Leakage** | Teacher walks down the hallway or aisle and hears music or video audio. | **Panic Mute Protection**: `togglePanicMode()` suspends `AudioContext` at the driver level and mutes video iframes in 0ms. Zero sound escapes even with headphones removed. |
+| **6** | **Remote Tab Close / Screen Lock** | Teacher pushes a lock screen or forcibly closes the student's tab. | **`beforeunload` Protection & Auto-Decoy**: Intercepts unprompted close events. Remote focus shifts immediately trigger the audible chime and auto-engage the decoy overlay. |
+| **7** | **Desktop Sharing (macOS)** | Zoom, Microsoft Teams, Google Meet screen sharing. | **Hardware Window Cloaking (`ScreenCloak.swift`)**: Uses macOS WindowServer `NSWindow.sharingType = .none` to physically remove the window from the display compositor. |
+
+---
+
 ## 👻 macOS Hardware Graphics Screen Cloak (`ScreenCloak`)
 
 For macOS users, a native Swift utility utilizing `NSWindow.sharingType = .none` removes the real browser window from digital framebuffers (Zoom, Teams, Discord, Screen Sharing, Screen Recorders) while projecting the Decoy layer beneath it.

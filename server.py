@@ -248,6 +248,20 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
         if path in ("/", "/index.html"):
             self._serve_dashboard()
+        elif path in ("/ghost", "/ghost.html"):
+            ghost_file = os.path.join(os.path.dirname(__file__), "ghost.html")
+            if os.path.exists(ghost_file):
+                with open(ghost_file, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+            else:
+                self._serve_dashboard()
+                return
         elif path == "/api/health":
             res = json.dumps({"status": "healthy", "service": "GhostCloak Proxy Engine", "port": PORT, "timestamp": time.time()}).encode("utf-8")
             self.send_response(200)
