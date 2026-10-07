@@ -34,9 +34,11 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Auto-Cloak on Visibility Change**: Instantly hides when minimized or split-screened.
 
 3. **Multi-Template School Decoys**:
-   - 📄 **Google Docs**: Active essay on Cellular Respiration with editable text, real Google Docs layout, toolbar, and menus.
-   - 🎓 **Canvas LMS**: Full dashboard with course cards (AP Biology, Calculus BC, US History) and upcoming assignments.
-   - 🏫 **Google Classroom**: Authentic Stream and Classwork cards.
+   - 📄 **Google Docs**: Active essay on Cellular Respiration with editable text, live word counter, real Google Docs layout, toolbar, and formatting buttons.
+   - 🎓 **Canvas LMS**: Full dashboard with course cards (AP Biology, Calculus BC, US History) and interactive To-Do assignment checkboxes.
+   - 🏫 **Google Classroom**: Authentic Stream and Classwork cards with "Turned In" status.
+   - 📐 **Desmos Graphing Calculator**: Interactive mathematical function plotter with coordinate axes, sine waves, and parabola curves.
+
 
 4. **`about:blank` Cloaking**:
    - Spawns the entire unblocker inside an `about:blank` window.
