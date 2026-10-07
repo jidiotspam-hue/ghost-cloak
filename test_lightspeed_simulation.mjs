@@ -60,6 +60,9 @@ class CDPClient {
 
   async evaluate(expression) {
     const res = await this.send('Runtime.evaluate', { expression, returnByValue: true });
+    if (res.exceptionDetails) {
+      console.error('[CDP Eval Error]:', res.exceptionDetails);
+    }
     return res.result ? res.result.value : null;
   }
 }
@@ -188,6 +191,13 @@ async function runBenchmark() {
     const eventT3 = await cdp.evaluate('window.surveillanceState.lastEvent');
     const decoyT3 = await cdp.evaluate('document.getElementById("decoyOverlay") ? document.getElementById("decoyOverlay").style.display : null');
 
+    // Restore document.hidden to false
+    await cdp.evaluate(`
+      Object.defineProperty(document, "hidden", { value: false, configurable: true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    `);
+    await sleep(200);
+
     results.push({
       id: 'T3_VISIBILITY_HIDDEN',
       name: 'Tab Visibility Hidden (document.hidden)',
@@ -258,8 +268,8 @@ async function runBenchmark() {
 
     // Call checkFrameTimings with artificial delta > 240 twice to test threshold
     await cdp.evaluate(`
-      checkFrameTimings(performance.now() + 300);
-      checkFrameTimings(performance.now() + 650);
+      checkFrameTimings(performance.now(), 320);
+      checkFrameTimings(performance.now(), 350);
     `);
     await sleep(300);
 
@@ -273,6 +283,7 @@ async function runBenchmark() {
       detected: afterT6 === true,
       details: `Trigger: ${eventT6 ? eventT6.reason : 'none'}`
     });
+    console.log(`Result: ${afterT6 ? 'DETECTED' : 'NOT DETECTED'} (Details: ${results[results.length - 1].details})`);
     // -------------------------------------------------------------
     // TEST 7: Ghost Tab Boot Mode (#ghost) & Initial Decoy State
     // -------------------------------------------------------------

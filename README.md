@@ -28,15 +28,35 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - Runs directly in Google Chrome on any Chromebook.
    - Requires zero extensions, zero flags, and zero developer mode.
 
-2. **Active Surveillance Radar & Real-Time Monitoring Alert**:
-   - **Real-Time Inspection Alert**: Continuously monitors tab focus state (`window.onblur`), visibility changes (`document.hidden`), compositor/frame micro-stutter spikes (caused by WebRTC screen recording or rapid desktop thumbnail generation), and untrusted automation clicks.
+2. **Active Surveillance Radar, Sensitivity Tuning & Debouncing**:
+   - **Real-Time Inspection Alert**: Continuously monitors tab focus state (`window.onblur`), visibility changes (`document.hidden`), compositor/frame micro-stutter spikes (caused by WebRTC screen recording or rapid desktop thumbnail generation), and untrusted automation clicks (`e.isTrusted === false`).
+   - **Multi-Level Radar Sensitivity Mode**:
+     - ⚖️ **Balanced (Default)**: Optimized for typical classroom use with standard debouncing and 260ms jitter threshold.
+     - ⚡ **High Sensitivity**: Instant alerts with reduced debouncing (600ms) and tight 200ms frame threshold for strict proctor environments.
+     - 🛡️ **Relaxed / Low False Alarms**: Features dynamic user-gesture suppression (suppresses accidental focus flaps when clicking UI dropdowns or inputs) and 380ms frame jitter threshold.
+   - **Surveillance Debouncing Engine**: Automatically suppresses duplicate hook flaps for the exact same event within a configurable window, preventing alert flutter.
    - **Visual Pulse & Floating Alert**: Features a live telemetry banner (`🟢 Surveillance Radar: Screen Private` → `🚨 ACTIVE SURVEILLANCE ALERT: MONITORING DETECTED!`) with exact trigger timestamps.
    - **Acoustic Warning Chime**: Synthesizes a discrete high-frequency double-tone (`880Hz → 660Hz`) via Web Audio API right into the user's earbuds to alert them immediately if the screen is inspected while looking away.
    - **Auto-Engage Decoy on Alert**: Instantly flips to the Google Docs essay the millisecond an inspection hook is flagged.
    - **Emergency Blackout Mode**: Press `Alt + K` or click **"⬛ Emergency Blackout"** to immediately display a pure black asleep screen.
    - **Real-Time Surveillance Telemetry Audit Log**: Tracks, logs, and displays every remote blur, visibility loss, or compositor jitter event with exact time of detection and defense action taken.
 
-3. **Multi-Theme Workspace Styling Engine**:
+3. **Dynamic Self-Masking Engine (Automated Multi-Course Camouflage)**:
+   - Continuously rotates the tab's visible identity across genuine academic coursework on a 45-second timer:
+     - 🧬 *AP Biology: Mitochondrial ATP Synthesis*
+     - 🎓 *Canvas LMS: Assignment Modules*
+     - 📐 *AP Calculus BC: Problem Set 4*
+     - ⚡ *Khan Academy: Cellular Energy Unit*
+     - 📘 *Quizlet: Cellular Respiration Study Set*
+   - Dynamically swaps `<title>`, authentic favicon icons, and address bar query strings (`history.replaceState`) to ensure browser history, tab lists, and over-the-shoulder teacher glances always see active academic work.
+
+4. **Stealth Arcade & Logic Study Breaks (Offline Pure JS)**:
+   - Embedded offline logic games designed for discreet study breaks during long sessions:
+     - 🔢 **2048: Powers of 2 Math Logic**: Full 4x4 tile merging math game with persistent best score tracking. Playable with Arrow keys or `WASD`.
+     - 🐍 **Cellular Respiration Snake**: Interactive cell biology themed snake game where the organelle matrix consumes mitochondrial ATP nutrients (`38bdf8`) on an HTML5 canvas.
+   - **Dual-Surface Execution**: Playable both in the main workspace and inside a dedicated **Computational Thinking / Bioenergetics Logic Lab** decoy template screen.
+
+5. **Multi-Theme Workspace Styling Engine**:
    - Switch seamlessly between 6 distinct visual workspace themes via the header selector:
      - 🌙 **Midnight Dark** (Default)
      - ⚡ **Neon Cyan** (High-contrast blue/cyan cyberpunk palette)
@@ -46,18 +66,18 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
      - ⬛ **Pure OLED Stealth** (True `#000000` absolute black for zero backlight bleed)
    - Preferences automatically persist to local storage.
 
-4. **Pomodoro Focus Study Timer**:
+6. **Pomodoro Focus Study Timer**:
    - Integrated study cycle clock (25-minute Deep Focus + 5-minute Rest interval).
    - Embedded both in the top header and inside the Google Docs decoy toolbar (`⏱️ 25:00`).
    - Plays a gentle acoustic alert blip when switching between focus and rest periods.
 
-5. **In-Decoy Draggable "Ghost PiP" Floating Player**:
+7. **In-Decoy Draggable "Ghost PiP" Floating Player**:
    - Floating video player that operates **directly inside the Google Docs decoy screen**.
    - **Draggable & Resizable**: Drag from the header bar across the document on Chromebook touchscreen or mouse.
    - **Stealth Opacity Slider**: Adjust transparency from 20% to 100% so text on the document shows through.
    - **Quick Toggle**: Dedicated toolbar button or hotkey `Ctrl + Shift + P`.
 
-6. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
+8. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
    - 100% offline procedural ambient audio generator built with the Web Audio API — zero network downloads or external audio files.
    - **🌧️ Gentle Rain**: Filtered white noise stream simulating raindrops.
    - **🌊 Ocean Tides**: Low-pass filtered noise modulated by a 0.12Hz Low-Frequency Oscillator (LFO) creating rhythmic rolling surf waves.
@@ -66,7 +86,7 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Panic Mute Protection**: Instantly suspends Web Audio context when panic mode triggers so ambient sounds go completely silent during decoy inspection, resuming seamlessly when restored.
    - **Master & Track Volume**: Individual slider controls plus an animated real-time oscilloscope wave canvas.
 
-7. **In-App Study Notes & Citation Scratchpad**:
+9. **In-App Study Notes & Citation Scratchpad**:
    - Built-in scratchpad for jotting lecture notes, timestamps, and bibliography citations.
    - Auto-saves to `localStorage`.
    - **💾 Export .MD**: One-click download as structured Markdown.
@@ -74,29 +94,29 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **📋 Copy Citation**: Automatically formats notes into academic BibTeX citations.
    - **📄 Send to Google Doc**: Appends notes directly into the active Google Docs decoy essay.
 
-8. **Multi-Template School Decoys & Full Interactivity**:
-   - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
-     - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
-     - 🏛️ *AP US History: Progressive Era & Labor Reform*
-     - 📖 *English Literature: Thematic Duality in Hamlet*
-     - ⚗️ *Chemistry: Equilibrium & Le Chatelier's Principle*
-     Includes rich toolbar (bold, italic, align), word & character counter, and secret uncloak click on `"☁️ Saved to Drive"`.
-   - 🎓 **Interactive Canvas LMS**: Tabbed interface featuring Dashboard, Courses, Grades (with GPA calculator), Calendar (homework timeline), and interactive To-Do checkboxes.
-   - 🏫 **Interactive Google Classroom**: Stream, Classwork, and People views with clickable "Turn In" buttons and submission confirmations.
-   - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
-   - 📖 **Authentic Wikipedia Decoy**: Encyclopedic layout complete with article search, infobox, table of contents, and scholarly references.
+10. **Multi-Template School Decoys & Full Interactivity**:
+    - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
+      - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
+      - 🏛️ *AP US History: Progressive Era & Labor Reform*
+      - 📖 *English Literature: Thematic Duality in Hamlet*
+      - ⚗️ *Chemistry: Equilibrium & Le Chatelier's Principle*
+      Includes rich toolbar (bold, italic, align), word & character counter, and secret uncloak click on `"☁️ Saved to Drive"`.
+    - 🎓 **Interactive Canvas LMS**: Tabbed interface featuring Dashboard, Courses, Grades (with GPA calculator), Calendar (homework timeline), and interactive To-Do checkboxes.
+    - 🏫 **Interactive Google Classroom**: Stream, Classwork, and People views with clickable "Turn In" buttons and submission confirmations.
+    - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
+    - 📖 **Authentic Wikipedia Decoy**: Encyclopedic layout complete with article search, infobox, table of contents, and scholarly references.
 
-9. **Academic Media Player Controls**:
-   - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
-   - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
-   - **Theater Mode**: One-click distraction-free cinema player.
+11. **Academic Media Player Controls**:
+    - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
+    - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
+    - **Theater Mode**: One-click distraction-free cinema player.
 
-10. **Client-Side Web Gateway & Sandbox Hub**:
+12. **Client-Side Web Gateway & Sandbox Hub**:
     - Embedded inline iframe browser sandbox with popout and close controls.
     - Quick pre-configured shortcuts for Hacker News, Wikipedia, Lichess, and IP Info.
     - Full `about:blank` history-cloaked popout mode.
 
-11. **Security, Sensors & Cloaking**:
+13. **Security, Sensors & Cloaking**:
     - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
     - **Hardened Anti-Force Close Guard (`beforeunload` + User Gesture Arming)**: Intercepts accidental tab closure and extension remote tab-close signals with an authentic academic confirmation modal (`"Warning: Active academic assignment in progress. Closing this tab will lose unsaved research data."`).
     - **Session Resurrection Engine**: Continuously snapshots active video ID, playback position, scratchpad notes, and active decoy to local storage every 3 seconds. If a tab is forcibly closed, a one-click **"⚡ Session Restored"** banner appears upon next load to immediately resume playback.
@@ -104,19 +124,19 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
     - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
     - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"`, the Canvas `"C"` logo, or the Wikipedia `"📖"` icon quietly unlocks the hub without touching the keyboard.
 
-12. **`about:blank` Cloaking**:
+14. **`about:blank` Cloaking**:
     - Spawns the entire unblocker inside an `about:blank` window.
     - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
     - Leaves **zero history** in `chrome://history`.
 
-13. **Lightspeed Systems Stealth Optimizations**:
+15. **Lightspeed Systems Stealth Optimizations**:
     - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
     - **Outgoing Request Camouflage (Proxy & Backend)**: Local proxy and API requests are cloaked with academic Referer headers (`https://docs.google.com/document/u/0/...`) and Origin (`https://docs.google.com`), disguising outbound traffic from network packet inspectors and district logs.
     - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
     - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
     - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
 
-14. **Multi-Tier Rotating School Wi-Fi Mirrors & Backend Synergy**:
+16. **Multi-Tier Rotating School Wi-Fi Mirrors & Backend Synergy**:
     - Multi-tier search fallback pipeline:
       1. Local backend API search (`127.0.0.1:8080/api/search`) via Python `yt-dlp` engine.
       2. Public Piped private mirror.
