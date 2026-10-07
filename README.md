@@ -1,10 +1,13 @@
-# All-in-One Stealth Proxy, YouTube Unblocker & Hardware Screen Cloak
+# All-in-One Stealth Suite: Proxy, YouTube Unblocker & Screen Cloak
 
-A high-performance proxy server and native macOS graphics-level stealth suite featuring:
-1. **Hardware Graphics Screen Cloak (`ScreenCloak`)**: Employs macOS WindowServer's `NSWindow.sharingType = .none` to completely omit secret browsing from digital capture while rendering an authentic Decoy tab (Google Docs, Canvas, Wikipedia).
-2. **Undetectable Stealth Web Proxy**: XOR token path masking with address bar auto-reset to `/app/session`.
-3. **Dedicated YouTube Unblocker**: Sub-150ms multi-engine playback with official YouTube HD, Piped privacy proxy, and Invidious mirrors.
-4. **Full HTTPS CONNECT Forward Proxy**: macOS system network proxying with loopback bypasses.
+A unified unblocking and surveillance defense system supporting both **native macOS hardware display cloaking** and **100% standalone execution on school Chromebooks**.
+
+---
+
+## 🌐 Live Web App (Chromebook & Any Device)
+
+- **Live GitHub Pages URL**: 👉 **[https://jidiotspam-hue.github.io/ghost-cloak/](https://jidiotspam-hue.github.io/ghost-cloak/)**
+- **GitHub Repository**: [`https://github.com/jidiotspam-hue/ghost-cloak`](https://github.com/jidiotspam-hue/ghost-cloak)
 
 ---
 
@@ -15,75 +18,58 @@ A high-performance proxy server and native macOS graphics-level stealth suite fe
 
 ---
 
-## 👻 Hardware Graphics Screen Cloak (`ScreenCloak`)
+## 💻 Chromebook Specific Features
 
-### How It Works
-When you are on Zoom, Microsoft Teams, Google Meet, Discord, or under digital monitoring (e.g., GoGuardian, LanSchool, Screen Sharing / VNC, or recording software):
-- **On your physical display**: You interact with the **Ghost Browser** running the All-in-One Proxy / YouTube / any site with full audio, video, clicks, and keystrokes.
-- **In digital framebuffers**: macOS Quartz WindowServer removes the Ghost Window entirely and replaces it with your chosen **Decoy Tab** (Google Docs with authentic essay drafts, Canvas LMS, Wikipedia, or Google Drive).
-- **Boss / Panic Key**: Press **`ESC`** at any moment to hide the Ghost Window and bring the Decoy forward for physical onlookers.
+School Chromebooks typically have strict administration policies: no Linux container (Crostini disabled), no terminal access, no third-party extensions, and aggressive surveillance extensions (GoGuardian, Securly, Lightspeed, LanSchool).
 
-### Launching ScreenCloak
-Run from terminal or click the **"👻 Screen Cloak"** button in the web dashboard:
-```bash
-./launch_screen_cloak.sh
-```
+GhostCloak addresses all of these limitations purely in client-side web technologies:
 
-### Verifying Graphics Cloak
-Run the automated test:
-```bash
-python3 test_cloak.py
-```
-*Result: 0 pixels of the Ghost Window captured in digital screenshots, >300,000 pixels of the Decoy Window captured.*
+1. **Zero Admin Rights / Zero Installation**:
+   - Runs directly in Google Chrome on any Chromebook.
+   - Requires zero extensions, zero flags, and zero developer mode.
 
----
+2. **Surveillance Defense Sensors (Auto-Cloak)**:
+   - **Auto-Cloak on Tab Blur**: When a teacher inspects the Chromebook or when you click another window, the tab automatically flips to an authentic Decoy.
+   - **Auto-Cloak on Cursor Leave**: Automatically cloaks if your mouse exits the window.
+   - **Auto-Cloak on Visibility Change**: Instantly hides when minimized or split-screened.
 
-## Features
+3. **Multi-Template School Decoys**:
+   - 📄 **Google Docs**: Active essay on Cellular Respiration with editable text, real Google Docs layout, toolbar, and menus.
+   - 🎓 **Canvas LMS**: Full dashboard with course cards (AP Biology, Calculus BC, US History) and upcoming assignments.
+   - 🏫 **Google Classroom**: Authentic Stream and Classwork cards.
 
-1. **Undetectable Stealth Web Proxy**:
-   - Zero destination URLs in browser address bar (resets to `/app/session`).
-   - Obfuscated XOR token paths (`/app/v/<token>`).
-   - One-click tab disguise selector (Google Docs, Drive, Canvas LMS, Wikipedia).
-   - `about:blank` popup mode leaving zero browser history.
+4. **`about:blank` Cloaking**:
+   - Spawns the entire unblocker inside an `about:blank` window.
+   - GoGuardian, Securly, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
+   - Leaves **zero history** in `chrome://history`.
 
-2. **Dedicated YouTube Unblocker**:
-   - Instant playback (<150ms load time via oEmbed).
-   - **Multi-Engine Switcher**:
-     - 🔴 **YouTube HD / 4K** (Official player with full controls & subtitles)
-     - 🟢 **Piped Privacy Mirror** (Ad-free, unblocked from strict network firewalls)
-     - 🟣 **Invidious Mirror**
-     - 🔵 **Mirror 2**
-   - **Theater Mode** toggle for widescreen viewing.
-   - Built-in search portal (`/youtube?q=...`) supporting queries, video IDs, or direct YouTube links.
+5. **Offline Download (`GhostCloak_Chromebook.html`)**:
+   - Click **"💾 Download Standalone File"** to save the single HTML file to the Chromebook's `Downloads` folder.
+   - Open it by pressing `Ctrl + O` in Chrome. Runs completely offline from the Chromebook's local disk even if the school firewall blocks GitHub!
 
-3. **One-Click Proxied Chrome Launcher**:
-   - Launches a dedicated Google Chrome window routed 100% through the proxy (`127.0.0.1:8080`).
-   - Works directly from the web UI buttons or `./launch_proxied_chrome.sh`.
-
-4. **Forward HTTPS CONNECT Tunneling**:
-   - macOS network proxy support (`./enable_macos_proxy.sh`).
-   - Loopback bypass protection for seamless local connectivity.
+6. **Rotating School Wi-Fi Mirrors**:
+   - Built-in multi-mirror fallback (YouTube HD, Piped, Invidious Mirrors 1, 2, 3) ensuring uninterrupted streaming even if the school network filters common domains.
 
 ---
 
-## Quick Start
+## 👻 macOS Hardware Graphics Screen Cloak (`ScreenCloak`)
 
-### 1. Start Server
+For macOS users, a native Swift utility utilizing `NSWindow.sharingType = .none` removes the real browser window from digital framebuffers (Zoom, Teams, Discord, Screen Sharing, Screen Recorders) while projecting the Decoy layer beneath it.
+
+- Launch: `./launch_screen_cloak.sh`
+- Verify: `python3 test_cloak.py`
+
+---
+
+## Quick Start (Local macOS Proxy Server)
+
 ```bash
+# Start local proxy server
 ./start_proxy.sh
-```
 
-### 2. Access in Browser
-- **Dashboard**: [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
-- **YouTube Unblocker**: [http://127.0.0.1:8080/youtube](http://127.0.0.1:8080/youtube)
-- **Watch Direct Video**: `http://127.0.0.1:8080/watch?v=<VIDEO_ID>`
+# Open local dashboard
+open http://127.0.0.1:8080/
 
-### 3. Launch Screen Cloak
-```bash
-./launch_screen_cloak.sh
-```
-
-### 4. Stop Server
-```bash
+# Stop local proxy server
 ./stop_proxy.sh
 ```
