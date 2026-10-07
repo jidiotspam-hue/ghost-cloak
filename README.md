@@ -33,25 +33,40 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Auto-Cloak on Cursor Leave**: Automatically cloaks if your mouse exits the window.
    - **Auto-Cloak on Visibility Change**: Instantly hides when minimized or split-screened.
 
-3. **Multi-Template School Decoys**:
-   - 📄 **Google Docs**: Active essay on Cellular Respiration with editable text, live word counter, real Google Docs layout, toolbar, and formatting buttons.
-   - 🎓 **Canvas LMS**: Full dashboard with course cards (AP Biology, Calculus BC, US History) and interactive To-Do assignment checkboxes.
-   - 🏫 **Google Classroom**: Authentic Stream and Classwork cards with "Turned In" status.
-   - 📐 **Desmos Graphing Calculator**: Interactive mathematical function plotter with coordinate axes, sine waves, and parabola curves.
+3. **Multi-Template School Decoys & Full Interactivity**:
+   - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
+     - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
+     - 🏛️ *AP US History: Progressive Era & Labor Reform*
+     - 📖 *English Literature: Thematic Duality in Hamlet*
+     - ⚗️ *Chemistry: Equilibrium & Le Chatelier's Principle*
+     Includes rich toolbar (bold, italic, align), word & character counter, and secret uncloak click on `"☁️ Saved to Drive"`.
+   - 🎓 **Interactive Canvas LMS**: Tabbed interface featuring Dashboard, Courses, Grades (with GPA calculator), Calendar (homework timeline), and interactive To-Do checkboxes.
+   - 🏫 **Interactive Google Classroom**: Stream, Classwork, and People views with clickable "Turn In" buttons and submission confirmations.
+   - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
 
+4. **Academic Media Player Controls**:
+   - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
+   - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
+   - **Theater Mode**: One-click distraction-free cinema player.
 
-4. **`about:blank` Cloaking**:
+5. **Security, Sensors & Cloaking**:
+   - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
+   - **Force-Close Prevention (`onbeforeunload`)**: Optional prompt before leaving to block monitoring tools or accidental tab closure.
+   - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
+   - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"` or the Canvas `"C"` logo quietly unlocks the hub without touching the keyboard.
+
+6. **`about:blank` Cloaking**:
    - Spawns the entire unblocker inside an `about:blank` window.
    - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
    - Leaves **zero history** in `chrome://history`.
 
-5. **Lightspeed Systems Stealth Optimizations**:
+7. **Lightspeed Systems Stealth Optimizations**:
    - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
    - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
    - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
    - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
 
-6. **Rotating School Wi-Fi Mirrors**:
+8. **Rotating School Wi-Fi Mirrors**:
    - Built-in multi-mirror fallback (NoCookie, YouTube HD, Piped, Invidious Mirrors 1, 2, 3) ensuring uninterrupted streaming even if the school network filters common domains.
 
 ---

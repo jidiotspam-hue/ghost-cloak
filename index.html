@@ -641,7 +641,15 @@
             <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
             <button class="engine-tab" id="eng-inv3" onclick="switchEngine('inv3')">⚡ Mirror 3</button>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <select id="playerSpeedSelect" onchange="setPlayerSpeed(this.value)" style="background:#1f2937; color:#d1d5db; border:1px solid #374151; padding:4px 8px; border-radius:6px; font-size:12px; cursor:pointer;" title="Playback speed">
+              <option value="1">1.0x Speed</option>
+              <option value="0.75">0.75x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+            <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="popoutPiP()" title="Pop out into mini floating window">🔲 Mini PiP</button>
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="toggleTheater()">⛶ Theater</button>
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="closePlayer()">✕ Close</button>
           </div>
@@ -712,11 +720,27 @@
             <div class="sensor-sub">Hides secret tab during window minimize or split screen</div>
           </div>
         </div>
+
+        <div class="sensor-item">
+          <input type="checkbox" id="sensorPreventClose" onchange="saveSensorSettings()" />
+          <div>
+            <div class="sensor-text">Prevent Force-Close / Exit Prompt</div>
+            <div class="sensor-sub">Prompts before closing tab to stop accidental loss</div>
+          </div>
+        </div>
       </div>
 
-      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:#1f2937; padding:6px 12px; border-radius:8px; border:1px solid #374151;">
+          <span style="font-size:12px; color:#9ca3af; font-weight:600;">Panic Hotkey:</span>
+          <select id="panicHotkeySelect" onchange="saveSensorSettings()" style="background:#111827; color:#fff; border:1px solid #4b5563; padding:4px 8px; border-radius:6px; font-size:12px; cursor:pointer;">
+            <option value="esc">ESC or Backtick (`)</option>
+            <option value="ctrlb">Ctrl + B</option>
+            <option value="ctrlq">Ctrl + Q</option>
+          </select>
+        </div>
         <button class="btn btn-panic" onclick="togglePanicMode()">
-          🚨 Test Panic Screen (ESC / ` key)
+          🚨 Test Panic Screen
         </button>
         <button class="btn btn-cloak" onclick="downloadStandaloneFile()">
           💾 Download Offline Study Notes (Biology_Lab_Notes.html)
@@ -757,15 +781,21 @@
     <!-- 1. GOOGLE DOCS TEMPLATE -->
     <div id="decoyTemplateDocs">
       <div class="docs-nav">
-        <div class="docs-icon">📄</div>
+        <div class="docs-icon" onclick="togglePanicMode()" style="cursor:pointer;" title="Secret Click: Return to Hub">📄</div>
         <div class="docs-title-wrap">
-          <div class="docs-title" contenteditable="true">Cellular Respiration and Mitochondrial Bioenergetics</div>
+          <div class="docs-title" id="docMainTitle" contenteditable="true">Cellular Respiration and Mitochondrial Bioenergetics</div>
           <div class="docs-menu">
             <span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Extensions</span><span>Help</span>
           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:11px; color:#5f6368;">☁️ Saved to Drive</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <select id="docSubjectSelect" onchange="switchDocSubject(this.value)" style="border:1px solid #dadce0; border-radius:14px; padding:3px 10px; font-size:12px; background:#fff; color:#3c4043; cursor:pointer;" title="Switch Course Preset">
+            <option value="bio">🧬 AP Biology: Cellular Respiration</option>
+            <option value="history">🏛️ AP US History: Progressive Era</option>
+            <option value="lit">📖 English Lit: Shakespeare's Hamlet</option>
+            <option value="chem">⚗️ Chemistry: Equilibrium &amp; Le Chatelier</option>
+          </select>
+          <span style="font-size:11px; color:#5f6368; cursor:pointer;" onclick="togglePanicMode()" title="Secret Click: Return to Hub">☁️ Saved to Drive</span>
           <button class="btn" style="background:#1a73e8; padding:6px 16px; border-radius:20px; font-size:12px;">🔒 Share</button>
         </div>
       </div>
@@ -788,22 +818,22 @@
       </div>
       <div class="docs-sheet-container">
         <div class="docs-page" id="docsContent" contenteditable="true" oninput="updateWordCount()">
-          <h1 style="font-size:22px; margin-bottom:14px;">1. Overview of Mitochondrial ATP Synthesis</h1>
-          <p>Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.</p>
-          <p>The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.</p>
-          <h2 style="font-size:18px; margin:20px 0 10px 0;">2. Key Regulatory Checkpoints</h2>
-          <p>Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.</p>
-          <p>Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.</p>
-          <h2 style="font-size:18px; margin:20px 0 10px 0;">3. Chemiosmotic Coupling &amp; ATP Synthase</h2>
-          <p>The proton gradient generated across the inner mitochondrial membrane creates an electrochemical potential driving protons back through the F₀F₁-ATP synthase complex, powering rotational catalysis to phosphorylate ADP into ATP.</p>
+          <h1 id="docHeading1" style="font-size:22px; margin-bottom:14px;">1. Overview of Mitochondrial ATP Synthesis</h1>
+          <p id="docP1">Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.</p>
+          <p id="docP2">The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.</p>
+          <h2 id="docHeading2" style="font-size:18px; margin:20px 0 10px 0;">2. Key Regulatory Checkpoints</h2>
+          <p id="docP3">Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.</p>
+          <p id="docP4">Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.</p>
+          <h2 id="docHeading3" style="font-size:18px; margin:20px 0 10px 0;">3. Chemiosmotic Coupling &amp; ATP Synthase</h2>
+          <p id="docP5">The proton gradient generated across the inner mitochondrial membrane creates an electrochemical potential driving protons back through the F₀F₁-ATP synthase complex, powering rotational catalysis to phosphorylate ADP into ATP.</p>
 
           <!-- IN-DOC CITATION VIDEO (CAMOUFLAGED IN THUMBNAIL GRABBERS) -->
           <div class="docs-figure-wrap" style="margin: 22px 0; border: 1px solid #dadce0; border-radius: 8px; padding: 14px; background: #fafbfc; max-width: 600px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" contenteditable="false">
             <div style="font-size: 13px; font-weight: 700; color: #202124; margin-bottom: 4px; display:flex; justify-content:space-between; align-items:center;">
-              <span>Figure 3.1: Video Lecture &bull; Bioenergetics Reference</span>
+              <span id="docFigTitle">Figure 3.1: Video Lecture &bull; Bioenergetics Reference</span>
               <span style="font-size:11px; color:#1a73e8; font-weight:500;">Academic Citation #4</span>
             </div>
-            <div style="font-size: 11px; color: #5f6368; margin-bottom: 10px;">Supplemental media: MIT OpenCourseWare / Khan Academy Bioenergetics Stream</div>
+            <div id="docFigSub" style="font-size: 11px; color: #5f6368; margin-bottom: 10px;">Supplemental media: MIT OpenCourseWare / Khan Academy Bioenergetics Stream</div>
             <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden;">
               <iframe id="docEmbeddedPlayer" 
                       src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0" 
@@ -827,15 +857,15 @@
     <!-- 2. CANVAS LMS -->
     <div id="decoyTemplateCanvas">
       <div class="canvas-sidebar">
-        <div class="canvas-logo">C</div>
-        <div class="canvas-item active">Dashboard</div>
-        <div class="canvas-item">Courses</div>
-        <div class="canvas-item">Calendar</div>
-        <div class="canvas-item">Inbox</div>
-        <div class="canvas-item">History</div>
+        <div class="canvas-logo" onclick="togglePanicMode()" style="cursor:pointer;" title="Secret Click: Return to Hub">C</div>
+        <div class="canvas-item active" id="cTabDash" onclick="switchCanvasTab('dashboard')">Dashboard</div>
+        <div class="canvas-item" id="cTabCourses" onclick="switchCanvasTab('courses')">Courses</div>
+        <div class="canvas-item" id="cTabGrades" onclick="switchCanvasTab('grades')">Grades</div>
+        <div class="canvas-item" id="cTabCal" onclick="switchCanvasTab('calendar')">Calendar</div>
+        <div class="canvas-item" id="cTabInbox" onclick="switchCanvasTab('inbox')">Inbox</div>
       </div>
       <div class="canvas-main">
-        <div class="canvas-content">
+        <div class="canvas-content" id="canvasContentArea">
           <h1 style="font-size:24px; margin-bottom:6px; font-weight:700;">Dashboard</h1>
           <p style="font-size:13px; color:#666; margin-bottom:18px;">Semester 1 &bull; Active Courses</p>
           <div class="canvas-cards">
@@ -896,30 +926,46 @@
     <!-- 3. GOOGLE CLASSROOM -->
     <div id="decoyTemplateClassroom">
       <div class="gc-header">
-        <span style="font-size:22px; cursor:pointer;">&#9776;</span>
-        <span style="color:#1e8e3e; font-weight:700;">Google</span> Classroom
+        <span style="font-size:22px; cursor:pointer;" onclick="togglePanicMode()" title="Secret Click: Return to Hub">&#9776;</span>
+        <span style="color:#1e8e3e; font-weight:700; margin-right:24px;">Google Classroom</span>
+        <div style="display:flex; gap:16px; font-size:13px; font-weight:600;">
+          <span id="gcTabStream" onclick="switchGCTab('stream')" style="cursor:pointer; color:#1e8e3e; border-bottom:2px solid #1e8e3e; padding-bottom:4px;">Stream</span>
+          <span id="gcTabClasswork" onclick="switchGCTab('classwork')" style="cursor:pointer; color:#5f6368; padding-bottom:4px;">Classwork</span>
+          <span id="gcTabPeople" onclick="switchGCTab('people')" style="cursor:pointer; color:#5f6368; padding-bottom:4px;">People</span>
+        </div>
       </div>
-      <div class="gc-cards">
-        <div class="gc-card">
-          <div class="gc-top" style="background:#1e8e3e;">
-            <div style="font-size:18px; font-weight:700;">Period 2: AP Biology</div>
-            <div style="font-size:12px; opacity:0.9;">Room 204 &bull; Mr. Henderson</div>
+      <div id="gcContentArea">
+        <div class="gc-cards">
+          <div class="gc-card">
+            <div class="gc-top" style="background:#1e8e3e;">
+              <div style="font-size:18px; font-weight:700;">Period 2: AP Biology</div>
+              <div style="font-size:12px; opacity:0.9;">Room 204 &bull; Mr. Henderson</div>
+            </div>
+            <div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;">
+              <div>Due tomorrow: Cellular Respiration Lab</div>
+              <button class="btn" style="padding:4px 10px; font-size:11px; background:#1e8e3e;" onclick="turnInAssignment('AP Biology Lab')">Turn In</button>
+            </div>
           </div>
-          <div style="padding:16px; font-size:13px; color:#555;">Due tomorrow: Cellular Respiration Worksheet (Turned In)</div>
-        </div>
-        <div class="gc-card">
-          <div class="gc-top" style="background:#1a73e8;">
-            <div style="font-size:18px; font-weight:700;">Period 4: AP Calculus BC</div>
-            <div style="font-size:12px; opacity:0.9;">Room 112 &bull; Ms. Zhao</div>
+          <div class="gc-card">
+            <div class="gc-top" style="background:#1a73e8;">
+              <div style="font-size:18px; font-weight:700;">Period 4: AP Calculus BC</div>
+              <div style="font-size:12px; opacity:0.9;">Room 112 &bull; Ms. Zhao</div>
+            </div>
+            <div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;">
+              <div>Due Oct 10: Problem Set 5</div>
+              <button class="btn" style="padding:4px 10px; font-size:11px; background:#1a73e8;" onclick="turnInAssignment('Calculus Problem Set 5')">Turn In</button>
+            </div>
           </div>
-          <div style="padding:16px; font-size:13px; color:#555;">Due Oct 10: Problem Set 5</div>
-        </div>
-        <div class="gc-card">
-          <div class="gc-top" style="background:#d93025;">
-            <div style="font-size:18px; font-weight:700;">Period 6: AP US History</div>
-            <div style="font-size:12px; opacity:0.9;">Room 305 &bull; Dr. Miller</div>
+          <div class="gc-card">
+            <div class="gc-top" style="background:#d93025;">
+              <div style="font-size:18px; font-weight:700;">Period 6: AP US History</div>
+              <div style="font-size:12px; opacity:0.9;">Room 305 &bull; Dr. Miller</div>
+            </div>
+            <div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;">
+              <div>Chapter 18 Discussion Questions</div>
+              <button class="btn" style="padding:4px 10px; font-size:11px; background:#d93025;" onclick="turnInAssignment('APUSH Chapter 18')">Turn In</button>
+            </div>
           </div>
-          <div style="padding:16px; font-size:13px; color:#555;">Chapter 18 Discussion Questions</div>
         </div>
       </div>
     </div>
@@ -927,20 +973,20 @@
     <!-- 4. DESMOS GRAPHING CALCULATOR -->
     <div id="decoyTemplateDesmos">
       <div class="desmos-sidebar">
-        <div style="padding:12px; background:#f4f4f4; border-bottom:1px solid #ddd; font-weight:700;">
-          Desmos Graphing Expressions
+        <div style="padding:12px 14px; background:#f4f4f4; border-bottom:1px solid #ddd; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+          <span>Desmos Expressions</span>
+          <div style="display:flex; gap:4px;">
+            <button class="btn btn-sec" style="padding:2px 8px; font-size:11px;" onclick="zoomDesmos(1.25)" title="Zoom In">+</button>
+            <button class="btn btn-sec" style="padding:2px 8px; font-size:11px;" onclick="zoomDesmos(0.8)" title="Zoom Out">-</button>
+            <button class="btn btn-sec" style="padding:2px 8px; font-size:11px;" onclick="resetDesmos()" title="Reset Zoom">⟲</button>
+          </div>
         </div>
-        <div class="desmos-item">
-          <div class="desmos-color" style="background:#c74440;"></div>
-          <span>y = sin(x)</span>
+        <div id="desmosExprList" style="flex:1; overflow-y:auto; padding:6px 0;">
+          <!-- Rendered dynamically -->
         </div>
-        <div class="desmos-item">
-          <div class="desmos-color" style="background:#2d70b3;"></div>
-          <span>y = 0.5x² - 3</span>
-        </div>
-        <div class="desmos-item">
-          <div class="desmos-color" style="background:#388c46;"></div>
-          <span>y = 2x + 1</span>
+        <div style="padding:10px 12px; border-top:1px solid #eee; background:#fafafa;">
+          <input type="text" id="newExprInput" placeholder="e.g. y = cos(x) or y = 3*x - 2" style="width:100%; padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:12px; margin-bottom:6px; box-sizing:border-box;" onkeydown="if(event.key==='Enter') addDesmosExpr();" />
+          <button class="btn" style="width:100%; padding:6px; font-size:12px; justify-content:center;" onclick="addDesmosExpr()">+ Add Expression</button>
         </div>
       </div>
       <div class="desmos-graph">
@@ -1023,14 +1069,19 @@
       }
     }
 
-    // Hotkeys: ESC or ` (backtick) or Ctrl+B
+    // --- CONFIGURABLE PANIC HOTKEY ---
     document.addEventListener("keydown", function(e) {
-      if (e.key === "Escape" || e.key === "`" || (e.ctrlKey && e.key === "b")) {
-        togglePanicMode();
+      var hotkey = (document.getElementById("panicHotkeySelect") ? document.getElementById("panicHotkeySelect").value : "esc");
+      if (hotkey === "esc") {
+        if (e.key === "Escape" || e.key === "`") { togglePanicMode(); }
+      } else if (hotkey === "ctrlb") {
+        if (e.ctrlKey && (e.key === "b" || e.key === "B")) { e.preventDefault(); togglePanicMode(); }
+      } else if (hotkey === "ctrlq") {
+        if (e.ctrlKey && (e.key === "q" || e.key === "Q")) { e.preventDefault(); togglePanicMode(); }
       }
     });
 
-    // --- SENSORS (AUTO-CLOAK ON SURVEILLANCE) ---
+    // --- SENSORS & PROTECTION (AUTO-CLOAK ON SURVEILLANCE) ---
     window.addEventListener("blur", function() {
       if (document.getElementById("sensorBlur") && document.getElementById("sensorBlur").checked) {
         var overlay = document.getElementById("decoyOverlay");
@@ -1052,29 +1103,258 @@
       }
     });
 
+    window.addEventListener("beforeunload", function(e) {
+      var prevent = document.getElementById("sensorPreventClose") && document.getElementById("sensorPreventClose").checked;
+      if (prevent) {
+        e.preventDefault();
+        e.returnValue = "Study session active. Close tab?";
+        return e.returnValue;
+      }
+    });
+
     function saveSensorSettings() {
-      localStorage.setItem("cb_sensor_blur", document.getElementById("sensorBlur").checked);
-      localStorage.setItem("cb_sensor_mouse", document.getElementById("sensorMouse").checked);
-      localStorage.setItem("cb_sensor_vis", document.getElementById("sensorVis").checked);
-      showToast("Surveillance sensors updated");
+      if (document.getElementById("sensorBlur")) localStorage.setItem("cb_sensor_blur", document.getElementById("sensorBlur").checked);
+      if (document.getElementById("sensorMouse")) localStorage.setItem("cb_sensor_mouse", document.getElementById("sensorMouse").checked);
+      if (document.getElementById("sensorVis")) localStorage.setItem("cb_sensor_vis", document.getElementById("sensorVis").checked);
+      if (document.getElementById("sensorPreventClose")) localStorage.setItem("cb_prevent_close", document.getElementById("sensorPreventClose").checked);
+      if (document.getElementById("panicHotkeySelect")) localStorage.setItem("cb_panic_hotkey", document.getElementById("panicHotkeySelect").value);
+      showToast("Security & sensor settings saved");
     }
 
-    // --- GOOGLE DOCS INTERACTIVE FORMATTING ---
+    // --- GOOGLE DOCS MULTI-SUBJECT TEMPLATES ---
+    var docSubjects = {
+      "bio": {
+        title: "Cellular Respiration and Mitochondrial Bioenergetics",
+        h1: "1. Overview of Mitochondrial ATP Synthesis",
+        p1: "Cellular respiration is a collection of metabolic reactions that convert biochemical energy from nutrients into adenosine triphosphate (ATP), subsequently releasing cellular waste products.",
+        p2: "The core catabolic pathways involved include glycolysis in the cytoplasm, pyruvate decarboxylation, the tricarboxylic acid (Krebs) cycle, and oxidative phosphorylation driven by the electron transport chain on the inner mitochondrial cristae membrane.",
+        h2: "2. Key Regulatory Checkpoints",
+        p3: "Phosphofructokinase-1 (PFK-1) serves as the primary committed rate-limiting step of glycolysis. It is allosterically inhibited by high ATP and citrate levels, and positively regulated by AMP and fructose-2,6-bisphosphate under low cellular energy charge.",
+        p4: "Complex IV (cytochrome c oxidase) catalyzes the final transfer of electrons to molecular oxygen, generating water and maintaining the proton motive force across the inner membrane.",
+        h3: "3. Chemiosmotic Coupling & ATP Synthase",
+        p5: "The proton gradient generated across the inner mitochondrial membrane creates an electrochemical potential driving protons back through the F₀F₁-ATP synthase complex, powering rotational catalysis to phosphorylate ADP into ATP.",
+        figTitle: "Figure 3.1: Video Lecture • Bioenergetics Reference",
+        figSub: "Supplemental media: MIT OpenCourseWare / Khan Academy Bioenergetics Stream"
+      },
+      "history": {
+        title: "The Progressive Era and Industrial Labor Reform (1890–1920)",
+        h1: "1. The Rise of Muckraking Journalism and Public Awareness",
+        p1: "During the late nineteenth and early twentieth centuries, investigative journalists known as muckrakers exposed corporate malfeasance, unsafe working conditions, and municipal corruption in American urban centers.",
+        p2: "Upton Sinclair's publication of The Jungle in 1906 galvanized legislative action, prompting President Theodore Roosevelt and Congress to pass the Pure Food and Drug Act as well as the Meat Inspection Act.",
+        h2: "2. Legislative Milestones and Trust Regulation",
+        p3: "The Clayton Antitrust Act of 1914 strengthened statutory prohibitions against anti-competitive practices, specifically exempting labor unions from classification as illegal conspiracies in restraint of trade.",
+        p4: "The establishment of the Federal Trade Commission (FTC) under Woodrow Wilson created regulatory machinery empowered to investigate unfair methods of competition and protect consumer welfare.",
+        h3: "3. Constitutional Amendments and Electoral Democracy",
+        p5: "The era witnessed foundational constitutional transformations: the Seventeenth Amendment mandated direct popular election of United States Senators, while the Nineteenth Amendment guaranteed women's suffrage nationwide.",
+        figTitle: "Figure 2.4: Archival Lecture • The Progressive Era and Labor Movements",
+        figSub: "Source: Library of Congress Historical Film Archives / Gilder Lehrman Institute"
+      },
+      "lit": {
+        title: "Thematic Duality and Moral Paralysis in Shakespeare's Hamlet",
+        h1: "1. The Soliloquy as Internal Epistemological Crisis",
+        p1: "Prince Hamlet's soliloquies dramatize the agonizing tension between contemplative philosophical introspection and the violent imperative of filial revenge in renaissance Denmark.",
+        p2: "In 'To be or not to be', Shakespeare shifts the tragedy beyond personal vengeance into universal meditation on existence, mortality, and the terrifying ambiguity of the afterlife.",
+        h2: "2. The Motif of Corruption and Moral Decay",
+        p3: "Imagery of disease, rot, and physical contagion permeates the text, encapsulated in Marcellus's remark that 'something is rotten in the state of Denmark.'",
+        p4: "Claudius's fratricide violates both natural order and divine right, poisoning the Danish court literally and symbolically from within.",
+        h3: "3. Action Versus Inaction: The Tragedy of Delay",
+        p5: "Hamlet's fatal flaw is not lack of intellect, but excessive ratiocination—his profound awareness of moral ambiguity paralyzes his capacity for decisive political action until catastrophic circumstances force his hand.",
+        figTitle: "Figure 1.2: Royal Shakespeare Company Masterclass • Hamlet Monologue Analysis",
+        figSub: "Source: British National Theatre Archive / Cambridge Shakespeare Studies"
+      },
+      "chem": {
+        title: "Thermodynamic Equilibrium and Le Chatelier's Principle",
+        h1: "1. Dynamic Equilibrium in Reversible Gas-Phase Reactions",
+        p1: "Chemical equilibrium represents a dynamic state in which the forward and reverse reaction rates are identical, resulting in macroscopic concentrations of reactants and products remaining constant over time.",
+        p2: "The reaction quotient Q equals the equilibrium constant K only when the system has achieved minimum Gibbs free energy (ΔG = 0).",
+        h2: "2. Le Chatelier's Principle and Stress Perturbations",
+        p3: "When an external stress—such as a shift in temperature, total pressure, or species concentration—is imposed on an equilibrium mixture, the system shifts endergonically or exergonically to counteract the applied disturbance.",
+        p4: "For exothermic processes (ΔH < 0), elevating the ambient temperature shifts the equilibrium towards reactants, decreasing the value of the equilibrium constant according to the Van 't Hoff equation.",
+        h3: "3. Industrial Application: The Haber-Bosch Synthesis",
+        p5: "The synthesis of ammonia (N₂ + 3H₂ ⇌ 2NH₃) balances thermodynamic yield against kinetic rate through moderate temperatures (400–450°C), elevated pressures (200 atm), and an iron-based catalyst.",
+        figTitle: "Figure 4.2: Laboratory Lecture • Spectrophotometric Equilibrium Demonstration",
+        figSub: "Source: Royal Society of Chemistry / MIT Chemical Principles Lecture Series"
+      }
+    };
+
+    function switchDocSubject(subjectKey) {
+      var s = docSubjects[subjectKey] || docSubjects["bio"];
+      document.getElementById("docMainTitle").innerText = s.title;
+      document.getElementById("docHeading1").innerText = s.h1;
+      document.getElementById("docP1").innerText = s.p1;
+      document.getElementById("docP2").innerText = s.p2;
+      document.getElementById("docHeading2").innerText = s.h2;
+      document.getElementById("docP3").innerText = s.p3;
+      document.getElementById("docP4").innerText = s.p4;
+      document.getElementById("docHeading3").innerText = s.h3;
+      document.getElementById("docP5").innerText = s.p5;
+      document.getElementById("docFigTitle").innerText = s.figTitle;
+      document.getElementById("docFigSub").innerText = s.figSub;
+      updateWordCount();
+      showToast("Doc template: " + s.title.split(":")[0]);
+    }
+
     function formatDoc(cmd) {
       document.execCommand(cmd, false, null);
     }
+
     function updateWordCount() {
       var text = document.getElementById("docsContent").innerText || "";
       var words = text.trim() ? text.trim().split(/\s+/).length : 0;
       var chars = text.length;
       document.getElementById("docStats").innerText = "Words: " + words + " • Characters: " + chars;
     }
+
     function toggleTodo(box) {
       box.nextElementSibling.style.textDecoration = box.checked ? "line-through" : "none";
       box.nextElementSibling.style.opacity = box.checked ? "0.6" : "1";
     }
 
-    // --- DESMOS CANVAS DRAWING ---
+    // --- CANVAS LMS INTERACTIVE TABS ---
+    function switchCanvasTab(tab) {
+      var area = document.getElementById("canvasContentArea");
+      ["Dash", "Courses", "Grades", "Cal", "Inbox"].forEach(function(t) {
+        var el = document.getElementById("cTab" + t);
+        if (el) el.classList.remove("active");
+      });
+      var activeEl = document.getElementById("cTab" + (tab === "dashboard" ? "Dash" : tab.charAt(0).toUpperCase() + tab.slice(1)));
+      if (activeEl) activeEl.classList.add("active");
+
+      if (tab === "dashboard") {
+        area.innerHTML = '<h1 style="font-size:24px; margin-bottom:6px; font-weight:700;">Dashboard</h1>' +
+          '<p style="font-size:13px; color:#666; margin-bottom:18px;">Semester 1 • Active Courses</p>' +
+          '<div class="canvas-cards">' +
+            '<div class="c-card"><div class="c-header" style="background:#1d4ed8;">AP Biology (Bio 101)</div><div class="c-body"><b>Current Grade: 96.4% (A)</b><br>Unit 4: Bioenergetics &amp; Cellular Respiration<br><small style="color:#888;">Next class: Tomorrow 9:00 AM</small></div></div>' +
+            '<div class="c-card"><div class="c-header" style="background:#047857;">AP Calculus BC (Math 250)</div><div class="c-body"><b>Current Grade: 94.2% (A)</b><br>Integration by Parts &amp; Taylor Series<br><small style="color:#888;">Homework #8 Assigned</small></div></div>' +
+            '<div class="c-card"><div class="c-header" style="background:#7c2d12;">AP US History (Hist 201)</div><div class="c-body"><b>Current Grade: 92.8% (A-)</b><br>The Gilded Age &amp; Progressive Era<br><small style="color:#888;">Chapter 18 Reading Notes</small></div></div>' +
+          '</div>';
+      } else if (tab === "grades") {
+        area.innerHTML = '<h1 style="font-size:24px; margin-bottom:6px; font-weight:700;">Grades</h1>' +
+          '<p style="font-size:13px; color:#666; margin-bottom:18px;">Fall 2026 • Cumulative GPA: 3.94</p>' +
+          '<div style="background:#fff; border-radius:6px; border:1px solid #ddd; overflow:hidden;">' +
+            '<table style="width:100%; border-collapse:collapse; font-size:13px;">' +
+              '<tr style="background:#f4f5f7; border-bottom:1px solid #ddd; text-align:left;"><th style="padding:10px 14px;">Course</th><th style="padding:10px 14px;">Score</th><th style="padding:10px 14px;">Grade</th></tr>' +
+              '<tr style="border-bottom:1px solid #eee;"><td style="padding:12px 14px; font-weight:600; color:#1d4ed8;">AP Biology</td><td style="padding:12px 14px;">96.4%</td><td style="padding:12px 14px; font-weight:700; color:#16a34a;">A</td></tr>' +
+              '<tr style="border-bottom:1px solid #eee;"><td style="padding:12px 14px; font-weight:600; color:#047857;">AP Calculus BC</td><td style="padding:12px 14px;">94.2%</td><td style="padding:12px 14px; font-weight:700; color:#16a34a;">A</td></tr>' +
+              '<tr style="border-bottom:1px solid #eee;"><td style="padding:12px 14px; font-weight:600; color:#7c2d12;">AP US History</td><td style="padding:12px 14px;">92.8%</td><td style="padding:12px 14px; font-weight:700; color:#16a34a;">A-</td></tr>' +
+              '<tr><td style="padding:12px 14px; font-weight:600; color:#4338ca;">English Literature</td><td style="padding:12px 14px;">95.1%</td><td style="padding:12px 14px; font-weight:700; color:#16a34a;">A</td></tr>' +
+            '</table>' +
+          '</div>';
+      } else if (tab === "calendar") {
+        area.innerHTML = '<h1 style="font-size:24px; margin-bottom:6px; font-weight:700;">Calendar</h1>' +
+          '<p style="font-size:13px; color:#666; margin-bottom:18px;">October 2026 Academic Schedule</p>' +
+          '<div style="background:#fff; padding:18px; border-radius:6px; border:1px solid #ddd;">' +
+            '<div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:12px;"><span>October 2026</span><span>Week 6 of Semester</span></div>' +
+            '<div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; font-size:12px;">' +
+              '<div style="padding:10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:4px;"><b>Mon Oct 5</b><br><span style="color:#1d4ed8;">Bio Lab Review</span></div>' +
+              '<div style="padding:10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:4px;"><b>Tue Oct 6</b><br><span style="color:#16a34a;">● Today: Chem Quiz</span></div>' +
+              '<div style="padding:10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:4px;"><b>Wed Oct 7</b><br><span style="color:#7c2d12;">History Debate</span></div>' +
+              '<div style="padding:10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:4px;"><b>Thu Oct 8</b><br><span style="color:#047857;">Calc Problem Set 8</span></div>' +
+              '<div style="padding:10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:4px;"><b>Fri Oct 9</b><br><span style="color:#dc2626;">Bio Lab Report Due</span></div>' +
+            '</div>' +
+          '</div>';
+      } else {
+        area.innerHTML = '<h1 style="font-size:24px; margin-bottom:6px; font-weight:700;">' + tab.charAt(0).toUpperCase() + tab.slice(1) + '</h1>' +
+          '<div style="background:#fff; padding:20px; border-radius:6px; border:1px solid #ddd; font-size:13px; color:#555;">No unread messages or notifications.</div>';
+      }
+    }
+
+    // --- GOOGLE CLASSROOM INTERACTIVE TABS & TURN IN ---
+    function switchGCTab(tab) {
+      ["Stream", "Classwork", "People"].forEach(function(t) {
+        var el = document.getElementById("gcTab" + t);
+        if (el) {
+          el.style.color = (t.toLowerCase() === tab) ? "#1e8e3e" : "#5f6368";
+          el.style.borderBottom = (t.toLowerCase() === tab) ? "2px solid #1e8e3e" : "none";
+        }
+      });
+      var area = document.getElementById("gcContentArea");
+      if (tab === "stream") {
+        area.innerHTML = '<div class="gc-cards">' +
+          '<div class="gc-card"><div class="gc-top" style="background:#1e8e3e;"><div style="font-size:18px; font-weight:700;">Period 2: AP Biology</div><div style="font-size:12px; opacity:0.9;">Room 204 • Mr. Henderson</div></div><div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;"><div>Due tomorrow: Cellular Respiration Lab</div><button class="btn" style="padding:4px 10px; font-size:11px; background:#1e8e3e;" onclick="turnInAssignment(\'AP Biology Lab\')">Turn In</button></div></div>' +
+          '<div class="gc-card"><div class="gc-top" style="background:#1a73e8;"><div style="font-size:18px; font-weight:700;">Period 4: AP Calculus BC</div><div style="font-size:12px; opacity:0.9;">Room 112 • Ms. Zhao</div></div><div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;"><div>Due Oct 10: Problem Set 5</div><button class="btn" style="padding:4px 10px; font-size:11px; background:#1a73e8;" onclick="turnInAssignment(\'Calculus Problem Set 5\')">Turn In</button></div></div>' +
+          '<div class="gc-card"><div class="gc-top" style="background:#d93025;"><div style="font-size:18px; font-weight:700;">Period 6: AP US History</div><div style="font-size:12px; opacity:0.9;">Room 305 • Dr. Miller</div></div><div style="padding:16px; font-size:13px; color:#555; display:flex; justify-content:space-between; align-items:center;"><div>Chapter 18 Discussion Questions</div><button class="btn" style="padding:4px 10px; font-size:11px; background:#d93025;" onclick="turnInAssignment(\'APUSH Chapter 18\')">Turn In</button></div></div>' +
+        '</div>';
+      } else if (tab === "classwork") {
+        area.innerHTML = '<div style="padding:24px; max-width:800px; margin:0 auto;">' +
+          '<h2 style="font-size:18px; color:#1e8e3e; margin-bottom:12px;">Unit 4: Bioenergetics &amp; Cellular Respiration</h2>' +
+          '<div style="background:#fff; border:1px solid #dadce0; border-radius:8px; margin-bottom:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;"><div><b>Lab 4.1: Mitochondrial Enzyme Kinetics</b><br><small style="color:#666;">Due tomorrow at 11:59 PM</small></div><button class="btn" style="background:#1e8e3e; font-size:12px; padding:6px 12px;" onclick="turnInAssignment(\'Lab 4.1\')">Turn In</button></div>' +
+          '<div style="background:#fff; border:1px solid #dadce0; border-radius:8px; margin-bottom:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;"><div><b>Homework 4.2: Electron Transport Chain Worksheet</b><br><small style="color:#16a34a;">✓ Turned in on Oct 4</small></div><span style="font-size:12px; color:#16a34a; font-weight:700;">100 / 100</span></div>' +
+        '</div>';
+      } else {
+        area.innerHTML = '<div style="padding:24px; max-width:800px; margin:0 auto;"><h2 style="font-size:18px; color:#1e8e3e; margin-bottom:12px;">Teachers</h2><div style="font-size:14px; margin-bottom:8px;">Mr. Henderson (henderson@school.edu)</div><h2 style="font-size:18px; color:#1e8e3e; margin:20px 0 12px 0;">Classmates (28 students)</h2><div style="font-size:13px; color:#666;">All enrolled students active.</div></div>';
+      }
+    }
+
+    function turnInAssignment(name) {
+      showToast("Assignment '" + name + "' submitted to Google Classroom!");
+    }
+
+    // --- DYNAMIC DESMOS GRAPHING CALCULATOR ---
+    var desmosScale = 40;
+    var desmosExpressions = [
+      { expr: "sin(x)", color: "#c74440", active: true },
+      { expr: "0.5*x*x - 3", color: "#2d70b3", active: true },
+      { expr: "2*x + 1", color: "#388c46", active: true },
+      { expr: "cos(x)", color: "#e67e22", active: false }
+    ];
+
+    function renderDesmosExprs() {
+      var list = document.getElementById("desmosExprList");
+      if (!list) return;
+      var html = "";
+      desmosExpressions.forEach(function(item, idx) {
+        html += '<div style="display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid #eee; font-family:monospace; font-size:14px;">';
+        html += '<input type="checkbox" ' + (item.active ? 'checked' : '') + ' onchange="toggleDesmosExpr(' + idx + ')" style="cursor:pointer;" />';
+        html += '<div style="width:12px; height:12px; border-radius:50%; background:' + item.color + ';"></div>';
+        html += '<span style="flex:1;">y = ' + item.expr + '</span>';
+        if (idx >= 3) {
+          html += '<button onclick="removeDesmosExpr(' + idx + ')" style="background:none; border:none; color:#888; cursor:pointer; font-size:12px;">✕</button>';
+        }
+        html += '</div>';
+      });
+      list.innerHTML = html;
+    }
+
+    function toggleDesmosExpr(idx) {
+      if (desmosExpressions[idx]) {
+        desmosExpressions[idx].active = !desmosExpressions[idx].active;
+        drawDesmos();
+      }
+    }
+
+    function removeDesmosExpr(idx) {
+      desmosExpressions.splice(idx, 1);
+      renderDesmosExprs();
+      drawDesmos();
+    }
+
+    function addDesmosExpr() {
+      var input = document.getElementById("newExprInput");
+      var val = (input ? input.value : "").trim();
+      if (!val) return;
+      if (val.toLowerCase().startsWith("y =") || val.toLowerCase().startsWith("y=")) {
+        val = val.replace(/^y\s*=\s*/i, "");
+      }
+      var colors = ["#8e44ad", "#d35400", "#16a085", "#2c3e50", "#c0392b"];
+      var color = colors[desmosExpressions.length % colors.length];
+      desmosExpressions.push({ expr: val, color: color, active: true });
+      input.value = "";
+      renderDesmosExprs();
+      drawDesmos();
+      showToast("Added expression: y = " + val);
+    }
+
+    function zoomDesmos(factor) {
+      desmosScale = Math.max(10, Math.min(150, desmosScale * factor));
+      drawDesmos();
+    }
+
+    function resetDesmos() {
+      desmosScale = 40;
+      drawDesmos();
+    }
+
     function drawDesmos() {
       setTimeout(function() {
         var canvas = document.getElementById("desmosCanvas");
@@ -1084,10 +1364,10 @@
         var ctx = canvas.getContext("2d");
         var w = canvas.width, h = canvas.height;
         var cx = w / 2, cy = h / 2;
-        var scale = 40;
+        var scale = desmosScale;
 
         ctx.clearRect(0, 0, w, h);
-        ctx.strokeStyle = "#e0e0e0";
+        ctx.strokeStyle = "#e8eaed";
         ctx.lineWidth = 1;
 
         // Grid
@@ -1095,34 +1375,66 @@
         for (var y = cy % scale; y < h; y += scale) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
         // Axes
-        ctx.strokeStyle = "#888";
+        ctx.strokeStyle = "#70757a";
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
 
-        // Wave 1: y = sin(x)
-        ctx.strokeStyle = "#c74440";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        for (var px = 0; px < w; px++) {
-          var mathX = (px - cx) / scale;
-          var mathY = Math.sin(mathX);
-          var py = cy - (mathY * scale);
-          if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
+        // Plot each active expression
+        desmosExpressions.forEach(function(item) {
+          if (!item.active) return;
+          try {
+            var sanitized = item.expr
+              .replace(/\^/g, '**')
+              .replace(/sin\(/g, 'Math.sin(')
+              .replace(/cos\(/g, 'Math.cos(')
+              .replace(/tan\(/g, 'Math.tan(')
+              .replace(/sqrt\(/g, 'Math.sqrt(')
+              .replace(/abs\(/g, 'Math.abs(')
+              .replace(/pi/gi, 'Math.PI');
+            var fn = new Function('x', 'return (' + sanitized + ');');
 
-        // Curve 2: y = 0.5x^2 - 3
-        ctx.strokeStyle = "#2d70b3";
-        ctx.beginPath();
-        for (var px = 0; px < w; px++) {
-          var mathX = (px - cx) / scale;
-          var mathY = 0.5 * mathX * mathX - 3;
-          var py = cy - (mathY * scale);
-          if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
+            ctx.strokeStyle = item.color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            var started = false;
+            for (var px = 0; px < w; px++) {
+              var mathX = (px - cx) / scale;
+              var mathY;
+              try { mathY = fn(mathX); } catch(err) { continue; }
+              if (isNaN(mathY) || !isFinite(mathY)) continue;
+              var py = cy - (mathY * scale);
+              if (!started) { ctx.moveTo(px, py); started = true; } else { ctx.lineTo(px, py); }
+            }
+            ctx.stroke();
+          } catch(e) {}
+        });
       }, 50);
+    }
+
+    // --- VIDEO PLAYER HELPERS: SPEED & MINI PIP ---
+    function setPlayerSpeed(speed) {
+      var frame = document.getElementById("mainPlayerFrame");
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage('{"event":"command","func":"setPlaybackRate","args":[' + speed + ']}', '*');
+      }
+      showToast("Playback speed: " + speed + "x");
+    }
+
+    function popoutPiP() {
+      if (!currentVideoId) return;
+      var w = 480, h = 270;
+      var left = window.screen.width - w - 20;
+      var top = window.screen.height - h - 60;
+      var win = window.open("", "PiPWindow", "width=" + w + ",height=" + h + ",top=" + top + ",left=" + left + ",resizable=yes,alwaysRaised=yes");
+      if (win) {
+        win.document.open();
+        win.document.write('<!DOCTYPE html><html><head><title>Document - Google Docs</title><link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"></head><body style="margin:0;background:#000;overflow:hidden;"><iframe src="https://www.youtube-nocookie.com/embed/' + currentVideoId + '?autoplay=1&rel=0" style="width:100vw;height:100vh;border:none;" allowfullscreen></iframe></body></html>');
+        win.document.close();
+        showToast("Mini floating player opened!");
+      } else {
+        alert("Popups blocked. Allow popups for Mini PiP.");
+      }
     }
 
     // --- ABOUT:BLANK CLOAKING ---
@@ -1347,8 +1659,25 @@
       var savedCloak = localStorage.getItem("gc_cloak_key") || "docs";
       document.getElementById("tabCloakSelect").value = savedCloak;
       switchTabCloak(savedCloak);
+
+      if (localStorage.getItem("cb_sensor_blur") !== null) {
+        document.getElementById("sensorBlur").checked = localStorage.getItem("cb_sensor_blur") === "true";
+      }
+      if (localStorage.getItem("cb_sensor_mouse") !== null) {
+        document.getElementById("sensorMouse").checked = localStorage.getItem("cb_sensor_mouse") === "true";
+      }
+      if (localStorage.getItem("cb_sensor_vis") !== null) {
+        document.getElementById("sensorVis").checked = localStorage.getItem("cb_sensor_vis") === "true";
+      }
+      if (localStorage.getItem("cb_prevent_close") !== null) {
+        document.getElementById("sensorPreventClose").checked = localStorage.getItem("cb_prevent_close") === "true";
+      }
+      if (localStorage.getItem("cb_panic_hotkey") !== null) {
+        document.getElementById("panicHotkeySelect").value = localStorage.getItem("cb_panic_hotkey");
+      }
     } catch(e) {}
 
+    renderDesmosExprs();
     searchOrPlay();
     setDecoyTemplate("docs");
   </script>
