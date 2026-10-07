@@ -40,6 +40,28 @@ import threading
 
 PORT = 8080
 HOST = "0.0.0.0"
+UPSTREAM_PROXY = os.environ.get("UPSTREAM_PROXY", None)
+ENABLE_DOH = True
+
+def resolve_doh(domain: str) -> str:
+    """Encrypted DNS over HTTPS fallback via Cloudflare DoH to evade local DNS poison/blocks."""
+    if not ENABLE_DOH or not domain or domain.replace(".", "").isdigit():
+        return domain
+    try:
+        req = urllib.request.Request(
+            f"https://cloudflare-dns.com/dns-query?name={urllib.parse.quote(domain)}&type=A",
+            headers={"Accept": "application/dns-json", "User-Agent": "Mozilla/5.0"}
+        )
+        with urllib.request.urlopen(req, timeout=4) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            answers = data.get("Answer", [])
+            for ans in answers:
+                if ans.get("type") == 1 and ans.get("data"):
+                    return ans.get("data")
+    except Exception:
+        pass
+    return domain
+
 STATS = {
     "start_time": time.time(),
     "requests_handled": 0,
@@ -176,7 +198,25 @@ class ProxyHandler(BaseHTTPRequestHandler):
         target_port = int(target_port) if target_port else 443
 
         try:
-            upstream_sock = socket.create_connection((target_host, target_port), timeout=15)
+            if UPSTREAM_PROXY:
+                # Chain through upstream HTTP proxy (e.g. http://proxy.example.com:8080)
+                proxy_parsed = urllib.parse.urlparse(UPSTREAM_PROXY if "://" in UPSTREAM_PROXY else f"http://{UPSTREAM_PROXY}")
+                p_host = proxy_parsed.hostname
+                p_port = proxy_parsed.port or 8080
+                upstream_sock = socket.create_connection((p_host, p_port), timeout=15)
+                # Send HTTP CONNECT to upstream proxy
+                connect_req = f"CONNECT {target_host}:{target_port} HTTP/1.1\r\nHost: {target_host}:{target_port}\r\nProxy-Connection: Keep-Alive\r\n\r\n"
+                upstream_sock.sendall(connect_req.encode("utf-8"))
+                resp_line = upstream_sock.recv(4096).decode("utf-8", errors="ignore")
+                if " 200 " not in resp_line:
+                    raise Exception(f"Upstream proxy rejected CONNECT: {resp_line.splitlines()[0] if resp_line else 'Empty'}")
+            else:
+                try:
+                    upstream_sock = socket.create_connection((target_host, target_port), timeout=15)
+                except Exception:
+                    # Fallback to Encrypted DNS over HTTPS resolved IP
+                    resolved_ip = resolve_doh(target_host)
+                    upstream_sock = socket.create_connection((resolved_ip, target_port), timeout=15)
         except Exception as e:
             with STATS_LOCK:
                 STATS["active_connections"] -= 1
@@ -1538,6 +1578,21 @@ def run_server(host=HOST, port=PORT):
         server.server_close()
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1].isdigit():
-        PORT = int(sys.argv[1])
+    import argparse
+    parser = argparse.ArgumentParser(description="All-in-One Stealth Proxy & YouTube Direct Engine")
+    parser.add_argument("port", nargs="?", type=int, default=PORT, help="Port to listen on (default: 8080)")
+    parser.add_argument("--upstream-proxy", type=str, default=UPSTREAM_PROXY, help="Upstream HTTP/HTTPS proxy to chain egress traffic through (e.g. http://proxy.example.com:8080)")
+    parser.add_argument("--no-doh", action="store_true", help="Disable Cloudflare DNS-over-HTTPS fallback")
+    args = parser.parse_args()
+
+    PORT = args.port
+    if args.upstream_proxy:
+        UPSTREAM_PROXY = args.upstream_proxy
+        print(f"  [+] Upstream Proxy Chaining Active: {UPSTREAM_PROXY}")
+    if args.no_doh:
+        ENABLE_DOH = False
+        print(f"  [-] Encrypted DoH Disabled")
+    else:
+        print(f"  [+] Encrypted DoH Fallback Active: cloudflare-dns.com")
+
     run_server(HOST, PORT)

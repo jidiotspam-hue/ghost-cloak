@@ -791,6 +791,7 @@
             <button class="engine-tab active" id="eng-nocookie" onclick="switchEngine('nocookie')">⚡ NoCookie (Lightspeed Safe)</button>
             <button class="engine-tab" id="eng-yt" onclick="switchEngine('yt')">▶️ YouTube HD</button>
             <button class="engine-tab" id="eng-direct" onclick="switchEngine('direct')">⚡ Local Daemon (Direct Stream)</button>
+            <button class="engine-tab" id="eng-relay" onclick="switchEngine('relay')">☁️ Cloudflare Relay</button>
             <button class="engine-tab" id="eng-piped" onclick="switchEngine('piped')">🛡️ Piped</button>
             <button class="engine-tab" id="eng-inv" onclick="switchEngine('inv')">🌐 Invidious</button>
             <button class="engine-tab" id="eng-inv2" onclick="switchEngine('inv2')">⚡ Mirror 2</button>
@@ -804,6 +805,7 @@
               <option value="1.5">1.5x</option>
               <option value="2">2.0x</option>
             </select>
+            <button class="btn btn-sec" id="btnAudioOnly" style="padding:4px 10px; font-size:12px; border-color:#10b981; color:#34d399;" onclick="toggleAudioOnlyMode()" title="Audio-Only Stealth Diagram: Plays audio in background while displaying an authentic AP Biology diagram to defeat Chromebook screen inspection">🎧 Audio Stealth</button>
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="popoutPiP()" title="Pop out into mini floating window">🔲 Mini PiP</button>
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="toggleTheater()">⛶ Theater</button>
             <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="closePlayer()">✕ Close</button>
@@ -817,6 +819,49 @@
                   referrerpolicy="strict-origin-when-cross-origin">
           </iframe>
           <video id="mainNativeVideo" controls autoplay style="display:none; width:100%; height:100%; background:#000; border-radius:8px;"></video>
+          
+          <!-- AUTHENTIC AUDIO-ONLY STEALTH DIAGRAM CAMOUFLAGE (DEFEATS CHROMEBOOK LIVE SCREEN VIEW) -->
+          <div id="audioCamouflageContainer" style="display:none; width:100%; height:100%; background:#0f172a; border-radius:8px; padding:20px; box-sizing:border-box; color:#e2e8f0; flex-direction:column; justify-content:space-between; border:1px solid #334155; position:absolute; top:0; left:0; z-index:10;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:#0284c7; color:#fff; font-size:11px; padding:2px 8px; border-radius:4px; font-weight:700;">FIGURE 4.3</span>
+                <span style="font-size:13px; font-weight:600; color:#38bdf8;">Cellular Respiration: Chemiosmosis &amp; ATP Synthase Complex</span>
+              </div>
+              <span style="font-size:11px; color:#94a3b8; font-family:monospace;">AP BIOLOGY &bull; UNIT 3</span>
+            </div>
+            <div style="display:flex; gap:16px; align-items:center; justify-content:center; flex:1; padding:12px 0;">
+              <svg width="420" height="180" viewBox="0 0 420 180" style="max-width:100%; height:auto;">
+                <rect x="10" y="20" width="400" height="140" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2" />
+                <rect x="25" y="35" width="110" height="110" rx="6" fill="#0f766e" opacity="0.8" />
+                <text x="80" y="75" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">Complex I-IV</text>
+                <text x="80" y="95" fill="#99f6e4" font-size="10" text-anchor="middle">e- Transport</text>
+                <text x="80" y="115" fill="#ccfbf1" font-size="9" text-anchor="middle">H+ Gradient</text>
+                
+                <path d="M 145 90 L 175 90" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow)" />
+                
+                <rect x="185" y="35" width="100" height="110" rx="6" fill="#1d4ed8" opacity="0.8" />
+                <text x="235" y="75" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">Intermembrane</text>
+                <text x="235" y="95" fill="#93c5fd" font-size="10" text-anchor="middle">[H+] High</text>
+                <text x="235" y="115" fill="#bfdbfe" font-size="9" text-anchor="middle">ΔΨ = 160mV</text>
+
+                <path d="M 295 90 L 325 90" stroke="#38bdf8" stroke-width="3" />
+
+                <rect x="335" y="35" width="60" height="110" rx="6" fill="#b45309" opacity="0.8" />
+                <text x="365" y="75" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">ATP</text>
+                <text x="365" y="90" fill="#fde68a" font-size="10" text-anchor="middle">Synth</text>
+                <text x="365" y="115" fill="#fef3c7" font-size="8" text-anchor="middle">ADP→ATP</text>
+              </svg>
+              <div style="font-size:11px; color:#cbd5e1; max-width:260px; line-height:1.5;">
+                <div style="font-weight:600; color:#f1f5f9; margin-bottom:4px;">Mechanistic Coupling:</div>
+                Protons pump across inner mitochondrial membrane creating proton-motive force. F0F1 rotor converts mechanical rotation into chemical phosphorylation:
+                <div style="font-family:monospace; background:#020617; padding:6px 8px; border-radius:4px; margin-top:6px; color:#38bdf8; font-size:10px;">ADP + Pi + H+ &rarr; ATP + H2O</div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334155; padding-top:6px; font-size:11px; color:#64748b;">
+              <span id="audioCamouflageStatus">🔊 Audio Streaming Active &bull; Screen Display Cloaked</span>
+              <button class="btn btn-sec" style="padding:2px 8px; font-size:10px;" onclick="toggleAudioOnlyMode()">✕ Exit Audio Stealth</button>
+            </div>
+          </div>
         </div>
         <div class="player-meta">
           <div class="player-title" id="activeVidTitle">Video Player Active</div>
@@ -2392,6 +2437,30 @@
         return;
       }
 
+      if (engine === "relay") {
+        var relayUrl = localStorage.getItem("gc_custom_relay_url") || "";
+        if (!relayUrl) {
+          relayUrl = prompt("Enter your Cloudflare Worker relay URL (e.g. https://your-worker.yourname.workers.dev):", "");
+          if (relayUrl) {
+            relayUrl = relayUrl.trim().replace(/\/+$/, "");
+            localStorage.setItem("gc_custom_relay_url", relayUrl);
+          }
+        }
+        if (relayUrl) {
+          showToast("Routing through Cloudflare Serverless Relay...");
+          if (nativeVid) { nativeVid.pause(); nativeVid.style.display = "none"; nativeVid.src = ""; }
+          if (frame) {
+            frame.style.display = "block";
+            frame.src = relayUrl + "/fetch?url=" + encodeURIComponent("https://www.youtube-nocookie.com/embed/" + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0");
+          }
+          return;
+        } else {
+          showToast("No relay URL configured, using NoCookie");
+          switchEngine("nocookie");
+          return;
+        }
+      }
+
       if (nativeVid) {
         nativeVid.pause();
         nativeVid.style.display = "none";
@@ -2403,6 +2472,52 @@
         frame.src = base + currentVideoId + "?autoplay=1&enablejsapi=1&rel=0";
       }
       showToast("Engine: " + engine.toUpperCase());
+    }
+
+    var isAudioOnlyStealth = false;
+    function toggleAudioOnlyMode() {
+      isAudioOnlyStealth = !isAudioOnlyStealth;
+      var camo = document.getElementById("audioCamouflageContainer");
+      var btn = document.getElementById("btnAudioOnly");
+      var frame = document.getElementById("mainPlayerFrame");
+      var nativeVid = document.getElementById("mainNativeVideo");
+
+      if (isAudioOnlyStealth) {
+        if (camo) camo.style.display = "flex";
+        if (btn) {
+          btn.style.background = "#059669";
+          btn.style.color = "#fff";
+          btn.innerText = "👁️ Exit Stealth";
+        }
+        // Keep audio running but conceal video viewport
+        if (frame && frame.style.display !== "none") {
+          frame.style.opacity = "0.001";
+          frame.style.position = "absolute";
+          frame.style.pointerEvents = "none";
+        }
+        if (nativeVid && nativeVid.style.display !== "none") {
+          nativeVid.style.opacity = "0.001";
+          nativeVid.style.position = "absolute";
+        }
+        showToast("🎧 Audio-Only Stealth Active: Biology diagram displayed to screens");
+      } else {
+        if (camo) camo.style.display = "none";
+        if (btn) {
+          btn.style.background = "";
+          btn.style.color = "#34d399";
+          btn.innerText = "🎧 Audio Stealth";
+        }
+        if (frame) {
+          frame.style.opacity = "1";
+          frame.style.position = "relative";
+          frame.style.pointerEvents = "auto";
+        }
+        if (nativeVid) {
+          nativeVid.style.opacity = "1";
+          nativeVid.style.position = "relative";
+        }
+        showToast("Exited Audio Stealth: Video display restored");
+      }
     }
 
     function toggleTheater() {

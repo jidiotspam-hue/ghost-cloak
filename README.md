@@ -142,6 +142,27 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
 | **5** | **Audio Leakage** | Teacher walks down the hallway or aisle and hears music or video audio. | **Panic Mute Protection**: `togglePanicMode()` suspends `AudioContext` at the driver level and mutes video iframes in 0ms. Zero sound escapes even with headphones removed. |
 | **6** | **Remote Tab Close / Screen Lock** | Teacher pushes a lock screen or forcibly closes the student's tab. | **`beforeunload` Protection & Auto-Decoy**: Intercepts unprompted close events. Remote focus shifts immediately trigger the audible chime and auto-engage the decoy overlay. |
 | **7** | **Desktop Sharing (macOS)** | Zoom, Microsoft Teams, Google Meet screen sharing. | **Hardware Window Cloaking (`ScreenCloak.swift`)**: Uses macOS WindowServer `NSWindow.sharingType = .none` to physically remove the window from the display compositor. |
+| **8** | **Chromebook Real-Time Frame Capture** (`chrome.desktopCapture` on ChromeOS) | Live 30fps screen stream viewing where native Swift/Cocoa WindowServer APIs cannot run. | **Audio-Only Stealth Diagram Mode**: Completely decouples audio playback from screen rendering. Reduces video viewport to zero pixels and replaces screen with high-fidelity AP Biology Chemiosmosis Diagram (`Figure 4.3`). Observer sees 100% academic biology content. |
+| **9** | **Network Perimeter Deep Packet Inspection & DNS Sinkholing** | District firewalls (Palo Alto, Fortinet) block YouTube IP ranges and poison local DNS. Localhost proxy egress is dropped. | **Serverless Cloudflare Relay (`worker.js`) & Encrypted DoH**: Intercepts and tunnels egress through Cloudflare edge network (`cloudflare-dns.com` + `worker.js`), stripping origin headers and bypassing local gateway DNS/IP filters. |
+
+---
+
+## 🔬 Architectural Defense Analysis & Mitigation Guide
+
+### 1. Chromebook Live Remote Screen Viewing
+* **Limitation Addressed**: `ScreenCloak.swift` relies on macOS Cocoa APIs (`NSWindow.sharingType = .none`). ChromeOS does not permit unprivileged web pages to exclude windows from OS compositing.
+* **Mitigation**: **Zero-Video Audio Stealth Mode (`toggleAudioOnlyMode`)**. On Chromebooks, media playback is rendered as an audio stream while replacing the entire visible canvas with an authentic, interactive academic diagram (`Figure 4.3: Chemiosmosis & ATP Synthase`). Live screen viewing captures legitimate coursework with zero media artifacts.
+
+### 2. Perimeter Firewall & Deep Packet Inspection (DPI)
+* **Limitation Addressed**: Running a local proxy on `127.0.0.1:8080` does not change egress network routing. School routers filter YouTube IPs and block unencrypted DNS lookups.
+* **Mitigation**:
+  1. **Serverless Cloudflare Worker Relay (`worker.js`)**: Deployable to Cloudflare's free edge network (`*.workers.dev`), serving as an encrypted off-network relay that handles upstream media requests and strips headers.
+  2. **Encrypted DNS-over-HTTPS (DoH)**: Built-in fallback resolving upstream hosts via `https://cloudflare-dns.com/dns-query` directly in `server.py`.
+  3. **Upstream Proxy Chaining**: `python3 server.py --upstream-proxy http://user:pass@remote-proxy:port` routes all egress traffic through external tunnels.
+
+### 3. Managed Chromebook Policy Locks
+* **Limitation Addressed**: District administrative settings block developer mode, downloading shell scripts, and third-party Chrome extensions.
+* **Mitigation**: GhostCloak operates purely in standards-compliant HTML5/Web Audio/Canvas running client-side on GitHub Pages or from an offline `Biology_Lab_Notes.html` file. Requires zero downloads, extensions, or administrative permissions.
 
 ---
 
@@ -157,7 +178,10 @@ For macOS users, a native Swift utility utilizing `NSWindow.sharingType = .none`
 ## Quick Start (Local macOS Proxy Server)
 
 ```bash
-# Start local proxy server
+# Start local proxy server with optional upstream proxy
+python3 server.py 8080 --upstream-proxy http://remote-proxy:8080
+
+# Or start with shell script
 ./start_proxy.sh
 
 # Open local dashboard
