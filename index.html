@@ -17,6 +17,43 @@
       --text: #f9fafb;
       --text-muted: #9ca3af;
       --code-bg: #030712;
+      --header-bg: rgba(17, 24, 39, 0.96);
+    }
+    body[data-theme="cyberpunk"] {
+      --bg: #050510;
+      --card: #0d0f22;
+      --card-border: #2a2d54;
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --accent: #f43f5e;
+      --text: #ecfeff;
+      --text-muted: #94a3b8;
+      --code-bg: #02040a;
+      --header-bg: rgba(13, 15, 34, 0.96);
+    }
+    body[data-theme="emerald"] {
+      --bg: #06140f;
+      --card: #0c231b;
+      --card-border: #164e3c;
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --accent: #34d399;
+      --text: #ecfdf5;
+      --text-muted: #6ee7b7;
+      --code-bg: #020a07;
+      --header-bg: rgba(12, 35, 27, 0.96);
+    }
+    body[data-theme="academic"] {
+      --bg: #1c1917;
+      --card: #292524;
+      --card-border: #44403c;
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --accent: #f59e0b;
+      --text: #fafaf9;
+      --text-muted: #a8a29e;
+      --code-bg: #0c0a09;
+      --header-bg: rgba(41, 37, 36, 0.96);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -27,6 +64,7 @@
       display: flex;
       flex-direction: column;
       line-height: 1.5;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* TOP HEADER */
@@ -577,6 +615,14 @@
     .desmos-graph { flex: 1; background: #fafafa; position: relative; }
     #desmosCanvas { width: 100%; height: 100%; display: block; }
 
+    /* 5. WIKIPEDIA DECOY */
+    #decoyTemplateWiki { display: none; flex-direction: column; height: 100%; width: 100%; background: #f6f6f6; color: #202122; font-family: sans-serif; overflow-y: auto; }
+    .wiki-header { background: #fff; border-bottom: 1px solid #a7d7f9; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .wiki-container { max-width: 980px; margin: 20px auto; background: #fff; border: 1px solid #a7d7f9; padding: 28px 36px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); line-height: 1.6; }
+    .wiki-h1 { font-family: 'Linux Libertine', Georgia, Times, serif; font-size: 28px; font-weight: normal; border-bottom: 1px solid #a2a9b1; margin-bottom: 12px; padding-bottom: 4px; }
+    .wiki-infobox { float: right; width: 280px; border: 1px solid #a2a9b1; background: #f8f9fa; padding: 12px; margin: 0 0 16px 16px; font-size: 12px; }
+    .wiki-toc { border: 1px solid #a2a9b1; background: #f8f9fa; padding: 10px 16px; width: 240px; margin: 16px 0; font-size: 13px; }
+
     /* PANIC RESTORE HINT */
     .panic-restore-hint {
       position: fixed;
@@ -625,6 +671,13 @@
         <button id="pomoBtn" onclick="togglePomodoro()" style="background:#3b82f6; color:#fff; border:none; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer;" title="Start/Pause">▶</button>
         <button onclick="resetPomodoro()" style="background:none; border:none; color:#9ca3af; font-size:11px; cursor:pointer;" title="Reset Timer">⟲</button>
       </div>
+
+      <select class="cloak-select" id="themeSelect" onchange="switchTheme(this.value)" title="Color Theme">
+        <option value="midnight">🌙 Midnight Dark</option>
+        <option value="cyberpunk">⚡ Neon Cyan</option>
+        <option value="emerald">🌲 Emerald Focus</option>
+        <option value="academic">📜 Warm Academic</option>
+      </select>
 
       <select class="cloak-select" id="tabCloakSelect" onchange="switchTabCloak(this.value)">
         <option value="docs">📄 Google Docs (Default)</option>
@@ -761,6 +814,7 @@
         <button class="btn btn-sec" id="btnDecoyCanvas" onclick="setDecoyTemplate('canvas')">🎓 Canvas LMS</button>
         <button class="btn btn-sec" id="btnDecoyClassroom" onclick="setDecoyTemplate('classroom')">🏫 Google Classroom</button>
         <button class="btn btn-sec" id="btnDecoyDesmos" onclick="setDecoyTemplate('desmos')">📐 Desmos Math</button>
+        <button class="btn btn-sec" id="btnDecoyWiki" onclick="setDecoyTemplate('wiki')">📖 Wikipedia</button>
       </div>
 
       <div class="sensor-grid">
@@ -831,6 +885,19 @@
         <button class="btn btn-cloak" onclick="downloadStandaloneFile()">
           💾 Download Offline Study Notes (Biology_Lab_Notes.html)
         </button>
+      </div>
+
+      <!-- SURVEILLANCE TELEMETRY AUDIT LOG -->
+      <div style="margin-top: 18px; background: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 12px 16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12px; font-weight:700; color:#9ca3af; display:flex; align-items:center; gap:6px;">
+            <span>📋 Real-Time Surveillance Telemetry Audit Log</span>
+          </span>
+          <button class="btn btn-sec" style="padding:2px 8px; font-size:10px;" onclick="clearSurveillanceLogs()">Clear Log</button>
+        </div>
+        <div id="telemetryLogList" style="max-height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #94a3b8; display: flex; flex-direction: column; gap: 4px;">
+          <div style="color: #64748b;">[System initialized] Surveillance radar actively polling browser telemetry hooks...</div>
+        </div>
       </div>
     </div>
 
@@ -1181,6 +1248,49 @@
       </div>
     </div>
 
+    <!-- 5. WIKIPEDIA DECOY -->
+    <div id="decoyTemplateWiki">
+      <div class="wiki-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:24px; cursor:pointer;" onclick="togglePanicMode()" title="Secret Click: Return to Hub">📖</span>
+          <span style="font-family:'Linux Libertine',Georgia,Times,serif; font-size:20px; font-weight:bold;">Wikipedia</span>
+          <span style="font-size:12px; color:#54595d;">The Free Encyclopedia</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <input type="text" id="wikiArticleSearch" placeholder="Search Wikipedia..." value="Mitochondrion" style="padding:4px 8px; border:1px solid #a2a9b1; border-radius:2px; font-size:12px; width:180px;" onkeydown="if(event.key==='Enter') searchWikipediaDecoy(this.value);" />
+          <button class="btn btn-sec" style="padding:3px 8px; font-size:11px;" onclick="searchWikipediaDecoy(document.getElementById('wikiArticleSearch').value)">Search</button>
+        </div>
+      </div>
+      <div class="wiki-container">
+        <h1 class="wiki-h1" id="wikiArticleTitle">Mitochondrion</h1>
+        <div class="wiki-infobox">
+          <div style="font-weight:bold; text-align:center; margin-bottom:8px; border-bottom:1px solid #ccc; padding-bottom:4px;">Mitochondrion</div>
+          <div style="text-align:center; background:#eee; padding:20px; font-size:11px; color:#666; margin-bottom:8px; border-radius:4px;">
+            [Micrograph of Animal Cell Cristae]
+          </div>
+          <div><b>Identifiers:</b> MeSH D008928</div>
+          <div><b>Component of:</b> Eukaryotic cytoplasm</div>
+          <div><b>Key role:</b> ATP synthesis &amp; oxidative phosphorylation</div>
+        </div>
+        <p id="wikiLeadPara">
+          A <b>mitochondrion</b> (/ˌmaɪtəˈkɒndriən/; pl.: mitochondria) is an organelle found in the cells of most eukaryotes, such as animals, plants and fungi. Mitochondria have a double membrane structure and use aerobic respiration to generate most of the cell's supply of adenosine triphosphate (ATP), which is used throughout the cell as a source of chemical energy.
+        </p>
+        <div class="wiki-toc">
+          <b>Contents</b>
+          <ol style="margin-left:16px; margin-top:6px; font-size:12px;">
+            <li>1 Origin and evolution</li>
+            <li>2 Structure and cristae</li>
+            <li>3 Cellular respiration</li>
+            <li>4 See also</li>
+          </ol>
+        </div>
+        <h2 style="font-size:18px; border-bottom:1px solid #a2a9b1; margin:16px 0 8px 0; padding-bottom:2px;">Cellular respiration</h2>
+        <p>
+          A dominant role for the mitochondria is the production of ATP, as reflected by the large number of proteins in the inner membrane for this task. This is done by oxidizing the major products of glucose: pyruvate, and NADH, which are produced through glycolysis in the cytosol. This process of cellular respiration, also known as aerobic respiration, is dependent on the presence of oxygen. When oxygen is limited, the glycolytic products are metabolized by anaerobic fermentation.
+        </p>
+      </div>
+    </div>
+
     <!-- RESTORE HINT -->
     <div class="panic-restore-hint" onclick="togglePanicMode()">
       Press ESC or click here to resume
@@ -1217,6 +1327,16 @@
       localStorage.setItem("gc_cloak_key", key);
     }
 
+    function switchTheme(theme) {
+      if (theme === "midnight") {
+        document.body.removeAttribute("data-theme");
+      } else {
+        document.body.setAttribute("data-theme", theme);
+      }
+      localStorage.setItem("gc_theme", theme);
+      showToast("Theme switched: " + theme.toUpperCase());
+    }
+
     // --- DECOY SELECTION & PANIC MODE ---
     function setDecoyTemplate(name) {
       activeDecoyName = name;
@@ -1224,8 +1344,10 @@
       document.getElementById("decoyTemplateCanvas").style.display = (name === "canvas") ? "flex" : "none";
       document.getElementById("decoyTemplateClassroom").style.display = (name === "classroom") ? "flex" : "none";
       document.getElementById("decoyTemplateDesmos").style.display = (name === "desmos") ? "flex" : "none";
+      var wikiEl = document.getElementById("decoyTemplateWiki");
+      if (wikiEl) wikiEl.style.display = (name === "wiki") ? "flex" : "none";
 
-      ["Docs", "Canvas", "Classroom", "Desmos"].forEach(function(k) {
+      ["Docs", "Canvas", "Classroom", "Desmos", "Wiki"].forEach(function(k) {
         var el = document.getElementById("btnDecoy" + k);
         if (el) el.className = (name === k.toLowerCase()) ? "btn" : "btn btn-sec";
       });
@@ -1233,6 +1355,16 @@
       if (name === "desmos") { drawDesmos(); }
       switchTabCloak(name);
       showToast("Decoy screen set to " + name.toUpperCase());
+    }
+
+    function searchWikipediaDecoy(query) {
+      var q = (query || "").trim();
+      if (!q) return;
+      var titleEl = document.getElementById("wikiArticleTitle");
+      var leadEl = document.getElementById("wikiLeadPara");
+      if (titleEl) titleEl.innerText = q.charAt(0).toUpperCase() + q.slice(1);
+      if (leadEl) leadEl.innerHTML = "In academic reference and scholarly literature, <b>" + q + "</b> constitutes a subject of rigorous inquiry across fundamental principles, historical developments, and analytical frameworks within contemporary pedagogical discourse.";
+      showToast("Wikipedia article: " + q);
     }
 
     function togglePanicMode() {
@@ -1351,6 +1483,8 @@
         floatingAlert.style.display = "flex";
       }
 
+      logTelemetryEvent(reason, timeStr);
+
       var chimeBox = document.getElementById("sensorAudioChime");
       if (!chimeBox || chimeBox.checked) {
         playWarningChime();
@@ -1370,6 +1504,25 @@
       window._alertTimeout = setTimeout(function() {
         resetSurveillanceRadar();
       }, 12000);
+    }
+
+    function logTelemetryEvent(reason, timeStr) {
+      var logList = document.getElementById("telemetryLogList");
+      if (!logList) return;
+      var item = document.createElement("div");
+      item.style.borderLeft = "2px solid #ef4444";
+      item.style.paddingLeft = "8px";
+      item.style.margin = "2px 0";
+      item.innerHTML = "<span style='color:#f87171;'>[" + (timeStr || new Date().toLocaleTimeString()) + "]</span> <b style='color:#fff;'>" + reason + "</b> &bull; <span style='color:#60a5fa;'>Action: Decoy Engaged</span>";
+      logList.prepend(item);
+    }
+
+    function clearSurveillanceLogs() {
+      var logList = document.getElementById("telemetryLogList");
+      if (logList) {
+        logList.innerHTML = "<div style='color: #64748b;'>[System initialized] Surveillance radar actively polling browser telemetry hooks...</div>";
+        showToast("Telemetry logs cleared");
+      }
     }
 
     function resetSurveillanceRadar() {
@@ -2469,6 +2622,12 @@
       var savedCloak = localStorage.getItem("gc_cloak_key") || "docs";
       document.getElementById("tabCloakSelect").value = savedCloak;
       switchTabCloak(savedCloak);
+
+      var savedTheme = localStorage.getItem("gc_theme") || "midnight";
+      if (document.getElementById("themeSelect")) {
+        document.getElementById("themeSelect").value = savedTheme;
+        switchTheme(savedTheme);
+      }
 
       if (localStorage.getItem("cb_sensor_blur") !== null) {
         document.getElementById("sensorBlur").checked = localStorage.getItem("cb_sensor_blur") === "true";

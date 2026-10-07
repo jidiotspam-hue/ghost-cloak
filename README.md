@@ -34,30 +34,39 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - **Acoustic Warning Chime**: Synthesizes a discrete high-frequency double-tone (`880Hz → 660Hz`) via Web Audio API right into the user's earbuds to alert them immediately if the screen is inspected while looking away.
    - **Auto-Engage Decoy on Alert**: Instantly flips to the Google Docs essay the millisecond an inspection hook is flagged.
    - **Emergency Blackout Mode**: Press `Alt + K` or click **"⬛ Emergency Blackout"** to immediately display a pure black asleep screen.
+   - **Real-Time Surveillance Telemetry Audit Log**: Tracks, logs, and displays every remote blur, visibility loss, or compositor jitter event with exact time of detection and defense action taken.
 
-3. **Pomodoro Focus Study Timer**:
+3. **Multi-Theme Workspace Styling Engine**:
+   - Switch seamlessly between 4 distinct visual workspace themes via the header selector:
+     - 🌙 **Midnight Dark** (Default)
+     - ⚡ **Neon Cyan** (High-contrast blue/cyan cyberpunk palette)
+     - 🌲 **Emerald Focus** (Muted deep green eye-comfort theme)
+     - 📜 **Warm Academic** (Classic sepia-toned parchment paper aesthetic)
+   - Preferences automatically persist to local storage.
+
+4. **Pomodoro Focus Study Timer**:
    - Integrated study cycle clock (25-minute Deep Focus + 5-minute Rest interval).
    - Embedded both in the top header and inside the Google Docs decoy toolbar (`⏱️ 25:00`).
    - Plays a gentle acoustic alert blip when switching between focus and rest periods.
 
-4. **In-Decoy Draggable "Ghost PiP" Floating Player**:
+5. **In-Decoy Draggable "Ghost PiP" Floating Player**:
    - Floating video player that operates **directly inside the Google Docs decoy screen**.
    - **Draggable & Resizable**: Drag from the header bar across the document on Chromebook touchscreen or mouse.
    - **Stealth Opacity Slider**: Adjust transparency from 20% to 100% so text on the document shows through.
    - **Quick Toggle**: Dedicated toolbar button or hotkey `Ctrl + Shift + P`.
 
-5. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
+6. **Study Focus Sound Studio (Web Audio Procedural Synthesis)**:
    - 100% offline procedural ambient audio generator built with the Web Audio API — zero network downloads or external audio files.
    - **🌧️ Gentle Rain**: Filtered white noise stream simulating raindrops.
    - **🌊 Ocean Tides**: Low-pass filtered noise modulated by a 0.12Hz Low-Frequency Oscillator (LFO) creating rhythmic rolling surf waves.
    - **🧠 40Hz Gamma Focus (Binaural Beats)**: Left ear (200Hz) and right ear (240Hz) tone synthesis generating a 40Hz gamma entrainment frequency for deep study concentration.
    - **Master & Track Volume**: Individual slider controls plus an animated real-time oscilloscope wave canvas.
 
-6. **In-App Study Notes & Citation Scratchpad**:
+7. **In-App Study Notes & Citation Scratchpad**:
    - Built-in scratchpad for jotting lecture notes, timestamps, and bibliography citations.
    - Auto-saves to `localStorage` and includes a one-click **"📄 Send to Google Doc"** button to append notes directly into the active essay.
 
-7. **Multi-Template School Decoys & Full Interactivity**:
+8. **Multi-Template School Decoys & Full Interactivity**:
    - 📄 **Google Docs with Multi-Subject Switcher**: Switch between 4 complete academic documents on the fly:
      - 🧬 *AP Biology: Cellular Respiration & ATP Synthesis*
      - 🏛️ *AP US History: Progressive Era & Labor Reform*
@@ -67,8 +76,9 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
    - 🎓 **Interactive Canvas LMS**: Tabbed interface featuring Dashboard, Courses, Grades (with GPA calculator), Calendar (homework timeline), and interactive To-Do checkboxes.
    - 🏫 **Interactive Google Classroom**: Stream, Classwork, and People views with clickable "Turn In" buttons and submission confirmations.
    - 📐 **Dynamic Desmos Graphing Calculator**: Mathematical function plotter with equation toggles, expression input (`+ Add Expression`), Zoom In/Out, reset controls, and real-time trigonometric/polynomial curve rendering.
+   - 📖 **Authentic Wikipedia Decoy**: Encyclopedic layout complete with article search, infobox, table of contents, and scholarly references.
 
-8. **Academic Media Player Controls**:
+9. **Academic Media Player Controls**:
    - **Playback Speed Selector**: Choose `0.75x`, `1.0x`, `1.25x`, `1.5x`, or `2.0x`.
    - **Mini PiP Popout**: Spawn a clean 480×270 floating popout window.
    - **Theater Mode**: One-click distraction-free cinema player.
