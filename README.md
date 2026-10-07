@@ -98,7 +98,9 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
 
 11. **Security, Sensors & Cloaking**:
     - **Configurable Panic Key**: Choose between `ESC / ~` (Default), `Ctrl + B`, or `Ctrl + Q`.
-    - **Force-Close Prevention (`onbeforeunload`)**: Optional prompt before leaving to block monitoring tools or accidental tab closure.
+    - **Hardened Anti-Force Close Guard (`beforeunload` + User Gesture Arming)**: Intercepts accidental tab closure and extension remote tab-close signals with an authentic academic confirmation modal (`"Warning: Active academic assignment in progress. Closing this tab will lose unsaved research data."`).
+    - **Session Resurrection Engine**: Continuously snapshots active video ID, playback position, scratchpad notes, and active decoy to local storage every 3 seconds. If a tab is forcibly closed, a one-click **"⚡ Session Restored"** banner appears upon next load to immediately resume playback.
+    - **Address Bar Cloaking (HTML5 History API)**: Dynamically disguises the visible URL in the Chrome address bar using `history.replaceState` (e.g. `?doc=ap_biology_mitochondrial_atp_synthesis&id=1BxiMVs...`). Extension tab queries and teacher glances see an authentic assignment document link.
     - **Surveillance Sensors**: Auto-cloak on tab blur, cursor exit, and window visibility change.
     - **Secret Uncloak Click**: Clicking `"☁️ Saved to Drive"`, the Canvas `"C"` logo, or the Wikipedia `"📖"` icon quietly unlocks the hub without touching the keyboard.
 
@@ -109,6 +111,7 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
 
 13. **Lightspeed Systems Stealth Optimizations**:
     - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
+    - **Outgoing Request Camouflage (Proxy & Backend)**: Local proxy and API requests are cloaked with academic Referer headers (`https://docs.google.com/document/u/0/...`) and Origin (`https://docs.google.com`), disguising outbound traffic from network packet inspectors and district logs.
     - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
     - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
     - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.

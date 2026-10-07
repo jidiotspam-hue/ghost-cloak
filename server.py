@@ -262,7 +262,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             else:
                 self._serve_dashboard()
                 return
-        elif path == "/api/health":
+        elif path in ("/api/health", "/docs/api/health"):
             res = json.dumps({"status": "healthy", "service": "GhostCloak Proxy Engine", "port": PORT, "timestamp": time.time()}).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
@@ -271,7 +271,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(res)
             return
-        elif path == "/api/search":
+        elif path in ("/api/search", "/docs/api/search"):
             query = urllib.parse.parse_qs(parsed.query).get("q", ["trending"])[0]
             results = search_yt(query)
             res = json.dumps({"query": query, "items": results}).encode("utf-8")
@@ -282,7 +282,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(res)
             return
-        elif path == "/api/stats":
+        elif path in ("/api/stats", "/docs/api/stats"):
             with STATS_LOCK:
                 stats_copy = dict(STATS)
             with LOGS_LOCK:
@@ -297,7 +297,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(res)
             return
-        elif path == "/api/stream":
+        elif path in ("/api/stream", "/docs/api/stream"):
             vid = urllib.parse.parse_qs(parsed.query).get("v", [""])[0]
             if vid:
                 stream_url = get_yt_stream(vid)
@@ -521,6 +521,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
             "Sec-Fetch-Site": "none",
             "Sec-Fetch-User": "?1",
             "Upgrade-Insecure-Requests": "1",
+            "Referer": "https://docs.google.com/document/u/0/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit",
+            "Origin": "https://docs.google.com",
         }
 
         if "Range" in self.headers:

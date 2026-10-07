@@ -744,6 +744,18 @@
   <!-- MAIN VIEW -->
   <div class="container">
 
+    <!-- SESSION AUTO-RECOVERY BANNER (RESURRECTION ON FORCE-CLOSE) -->
+    <div id="sessionRecoveryBanner" style="display:none; background:rgba(30, 41, 59, 0.95); border:1px solid rgba(56, 189, 248, 0.5); border-radius:10px; padding:10px 16px; margin-bottom:16px; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 4px 20px rgba(0,0,0,0.4); backdrop-filter:blur(8px);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">⚡</span>
+        <span id="sessionRecoveryText" style="font-size:13px; font-weight:600; color:#e2e8f0;">Active session recovered</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" style="padding:4px 12px; font-size:12px;" onclick="applySessionRecovery()">▶ Resume</button>
+        <button class="btn btn-sec" style="padding:4px 10px; font-size:12px;" onclick="dismissSessionRecovery()">✕ Dismiss</button>
+      </div>
+    </div>
+
     <!-- CHROMEBOOK SPECIAL BADGE -->
     <div class="cb-pill">
       <span>💻</span>
@@ -888,7 +900,7 @@
         </div>
 
         <div class="sensor-item">
-          <input type="checkbox" id="sensorPreventClose" onchange="saveSensorSettings()" />
+          <input type="checkbox" id="sensorPreventClose" onchange="saveSensorSettings()" checked />
           <div>
             <div class="sensor-text">Prevent Force-Close / Exit Prompt</div>
             <div class="sensor-sub">Prompts before closing tab to stop accidental loss</div>
@@ -1389,13 +1401,13 @@
 
     // --- TAB CLOAKING ---
     var disguises = {
-      "default": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
-      "docs": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
-      "drive": { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-      "canvas": { title: "Dashboard | Canvas LMS", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
-      "classroom": { title: "Classes - Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
-      "desmos": { title: "Desmos | Graphing Calculator", icon: "https://www.desmos.com/favicon.ico" },
-      "wiki": { title: "Wikipedia, the free encyclopedia", icon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" }
+      "default": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico", path: "?doc=ap_biology_mitochondrial_atp_synthesis&id=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" },
+      "docs": { title: "Document - Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico", path: "?doc=ap_biology_mitochondrial_atp_synthesis&id=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" },
+      "drive": { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png", path: "?drive=root&folders=biology_ap_period2" },
+      "canvas": { title: "Dashboard | Canvas LMS", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico", path: "?course=10492&assignment=lab4_cellular_respiration" },
+      "classroom": { title: "Classes - Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png", path: "?c=ap_biology_p2&t=cellular_respiration" },
+      "desmos": { title: "Desmos | Graphing Calculator", icon: "https://www.desmos.com/favicon.ico", path: "?calc=fourier_series_harmonics" },
+      "wiki": { title: "Cellular respiration - Wikipedia", icon: "https://en.wikipedia.org/static/favicon/wikipedia.ico", path: "?wiki=Cellular_respiration" }
     };
 
     function switchTabCloak(key) {
@@ -1404,6 +1416,14 @@
       var link = document.getElementById("tabFavicon");
       if (link) link.href = d.icon;
       localStorage.setItem("gc_cloak_key", key);
+
+      // Mask visible address bar URL via HTML5 History API without page reload
+      try {
+        var base = window.location.pathname;
+        var hash = window.location.hash || (activeDecoyName ? "#ghost" : "");
+        var query = d.path || "";
+        window.history.replaceState(null, d.title, base + query + hash);
+      } catch(e) {}
     }
 
     function switchTheme(theme) {
@@ -1719,14 +1739,75 @@
     }
     requestAnimationFrame(checkFrameTimings);
 
+    // --- USER GESTURE ARMING & FORCED-CLOSE DEFENSE ---
+    var userGestureArmed = false;
+    function armUserGesture() {
+      userGestureArmed = true;
+    }
+    window.addEventListener("pointerdown", armUserGesture, { once: true, passive: true });
+    window.addEventListener("keydown", armUserGesture, { once: true, passive: true });
+
+    // Snapshot session state every 3 seconds for resurrection on force-close / crash
+    function snapshotSession() {
+      try {
+        var titleEl = document.getElementById("activeVidTitle");
+        var notesEl = document.getElementById("studyScratchpad");
+        var sess = {
+          vid: currentVideoId,
+          title: (titleEl ? titleEl.innerText : ""),
+          engine: activeEngine,
+          decoy: activeDecoyName,
+          timestamp: new Date().toLocaleTimeString(),
+          notes: (notesEl ? notesEl.value : "")
+        };
+        localStorage.setItem("gc_last_active_session", JSON.stringify(sess));
+      } catch(e) {}
+    }
+    setInterval(snapshotSession, 3000);
+
     window.addEventListener("beforeunload", function(e) {
+      snapshotSession();
       var prevent = document.getElementById("sensorPreventClose") && document.getElementById("sensorPreventClose").checked;
       if (prevent) {
         e.preventDefault();
-        e.returnValue = "Study session active. Close tab?";
+        e.returnValue = "Warning: Active academic assignment in progress. Closing this tab will lose unsaved research data.";
         return e.returnValue;
       }
     });
+
+    function checkSessionRecovery() {
+      try {
+        var sessJson = localStorage.getItem("gc_last_active_session");
+        if (!sessJson) return;
+        var sess = JSON.parse(sessJson);
+        if (sess && sess.vid && sess.vid !== "dQw4w9WgXcQ") {
+          var bar = document.getElementById("sessionRecoveryBanner");
+          var text = document.getElementById("sessionRecoveryText");
+          if (bar && text) {
+            text.innerText = "Recovered session: \"" + (sess.title || sess.vid) + "\" (" + sess.timestamp + ")";
+            bar.style.display = "flex";
+            window._pendingRecoverSession = sess;
+          }
+        }
+      } catch(e) {}
+    }
+
+    function applySessionRecovery() {
+      if (window._pendingRecoverSession) {
+        var sess = window._pendingRecoverSession;
+        playVideo(sess.vid, sess.title);
+        if (sess.engine) switchEngine(sess.engine);
+        if (sess.decoy) setDecoyTemplate(sess.decoy);
+        dismissSessionRecovery();
+        showToast("Session recovered successfully!");
+      }
+    }
+
+    function dismissSessionRecovery() {
+      var bar = document.getElementById("sessionRecoveryBanner");
+      if (bar) bar.style.display = "none";
+      window._pendingRecoverSession = null;
+    }
 
     // --- EMERGENCY BLACKOUT SCREEN ---
     function toggleBlackout() {
@@ -2964,6 +3045,8 @@
       }
       if (localStorage.getItem("cb_prevent_close") !== null) {
         document.getElementById("sensorPreventClose").checked = localStorage.getItem("cb_prevent_close") === "true";
+      } else {
+        document.getElementById("sensorPreventClose").checked = true;
       }
       if (localStorage.getItem("cb_sensor_audio_chime") !== null && document.getElementById("sensorAudioChime")) {
         document.getElementById("sensorAudioChime").checked = localStorage.getItem("cb_sensor_audio_chime") === "true";
@@ -2985,6 +3068,7 @@
     renderDesmosExprs();
     searchOrPlay();
     setDecoyTemplate("docs");
+    checkSessionRecovery();
 
     // Check for Ghost Boot Mode (#ghost or ?mode=ghost)
     if (window.location.hash === "#ghost" || window.location.search.indexOf("mode=ghost") !== -1) {
