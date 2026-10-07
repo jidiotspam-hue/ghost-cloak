@@ -42,15 +42,17 @@ GhostCloak addresses all of these limitations purely in client-side web technolo
 
 4. **`about:blank` Cloaking**:
    - Spawns the entire unblocker inside an `about:blank` window.
-   - GoGuardian, Securly, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
+   - GoGuardian, Securly, Lightspeed, and ChromeOS URL filters **cannot block `about:blank`** because there is no domain name.
    - Leaves **zero history** in `chrome://history`.
 
-5. **Offline Download (`GhostCloak_Chromebook.html`)**:
-   - Click **"💾 Download Standalone File"** to save the single HTML file to the Chromebook's `Downloads` folder.
-   - Open it by pressing `Ctrl + O` in Chrome. Runs completely offline from the Chromebook's local disk even if the school firewall blocks GitHub!
+5. **Lightspeed Systems Stealth Optimizations**:
+   - **Title Scanner Immunity**: Default tab title is `Document - Google Docs` with real Google Docs favicon. Zero filter trigger keywords ("unblocker", "stealth", "proxy") in DOM or metadata.
+   - **NoCookie Domain Whitelisting**: Defaults to `https://www.youtube-nocookie.com/embed/`, the exact domain whitelisted by Lightspeed for Canvas and Google Classroom embeds.
+   - **Classroom Live Thumbnail Grabber Camouflage**: Integrates a synchronized video lecture citation (`Figure 3.1: Video Lecture &bull; Bioenergetics Reference`) directly inside the Google Docs essay. When teacher grid thumbnails capture student screens, the video appears as authentic coursework.
+   - **Discreet Offline File (`Biology_Lab_Notes.html`)**: Downloads as `Biology_Lab_Notes.html` so Chromebook `Downloads` folder inspections see an ordinary biology lab file. Runs directly from `file:///`.
 
 6. **Rotating School Wi-Fi Mirrors**:
-   - Built-in multi-mirror fallback (YouTube HD, Piped, Invidious Mirrors 1, 2, 3) ensuring uninterrupted streaming even if the school network filters common domains.
+   - Built-in multi-mirror fallback (NoCookie, YouTube HD, Piped, Invidious Mirrors 1, 2, 3) ensuring uninterrupted streaming even if the school network filters common domains.
 
 ---
 
